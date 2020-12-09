@@ -8,23 +8,42 @@
 import UIKit
 
 class EntryViewController: UIViewController {
+    
+    // MARK: - Attributes
+    let entryContentView:UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        return view
+    }()
+    
+    let sluLogo:UIImageView = {
+        let logo = UIImage(named: "sluvislab")
+        var logoImageView = UIImageView(image: logo)
+        return logoImageView
+    }()
 
+    // TODO: potentially make this RxSwift
+    let continueButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Continue", for: .normal)
+        button.addTarget(
+            self,
+            action: #selector(continueButtonPressed),
+            for: UIControl.Event.touchUpInside)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
-        // Do any additional setup after loading the view.
+        view.backgroundColor = .blue
+        setupEntryContentView()
     }
     
-
-    /*
     // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    @objc func continueButtonPressed(_ sender:UIButton!) {
+        print("Button tapped")
+        // load to next screen
+        
     }
-    */
-
 }

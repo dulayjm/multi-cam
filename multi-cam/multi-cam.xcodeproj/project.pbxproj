@@ -12,6 +12,7 @@
 		DBBE8FE725816A8D005F10BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DBBE8FE625816A8D005F10BE /* Assets.xcassets */; };
 		DBBE8FEA25816A8D005F10BE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DBBE8FE825816A8D005F10BE /* LaunchScreen.storyboard */; };
 		DBBE8FF425816CAB005F10BE /* EntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBE8FF325816CAB005F10BE /* EntryViewController.swift */; };
+		DBBE8FFA25817F5E005F10BE /* EntryViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBE8FF925817F5E005F10BE /* EntryViews.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		DBBE8FE925816A8D005F10BE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DBBE8FEB25816A8D005F10BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DBBE8FF325816CAB005F10BE /* EntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryViewController.swift; sourceTree = "<group>"; };
+		DBBE8FF925817F5E005F10BE /* EntryViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryViews.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +56,8 @@
 		DBBE8FDC25816A8C005F10BE /* multi-cam */ = {
 			isa = PBXGroup;
 			children = (
+				DBBE8FF825817E48005F10BE /* Models */,
+				DBBE8FF725817E40005F10BE /* Views */,
 				DBBE8FDD25816A8C005F10BE /* AppDelegate.swift */,
 				DBBE8FF325816CAB005F10BE /* EntryViewController.swift */,
 				DBBE8FDF25816A8C005F10BE /* SceneDelegate.swift */,
@@ -62,6 +66,21 @@
 				DBBE8FEB25816A8D005F10BE /* Info.plist */,
 			);
 			path = "multi-cam";
+			sourceTree = "<group>";
+		};
+		DBBE8FF725817E40005F10BE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				DBBE8FF925817F5E005F10BE /* EntryViews.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		DBBE8FF825817E48005F10BE /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -136,6 +155,7 @@
 				DBBE8FDE25816A8C005F10BE /* AppDelegate.swift in Sources */,
 				DBBE8FE025816A8C005F10BE /* SceneDelegate.swift in Sources */,
 				DBBE8FF425816CAB005F10BE /* EntryViewController.swift in Sources */,
+				DBBE8FFA25817F5E005F10BE /* EntryViews.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
