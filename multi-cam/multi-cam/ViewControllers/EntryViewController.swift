@@ -28,8 +28,8 @@ class EntryViewController: UIViewController {
         button.setTitle("Continue", for: .normal)
         button.addTarget(
             self,
-            action: #selector(continueButtonPressed),
-            for: UIControl.Event.touchUpInside)
+            action: #selector(continueButtonPressed(_:)),
+            for: .touchUpInside)
         return button
     }()
     
@@ -42,8 +42,8 @@ class EntryViewController: UIViewController {
     
     // MARK: - Navigation
     @objc func continueButtonPressed(_ sender:UIButton!) {
-        print("Button tapped")
-        // load to next screen
-        
+        // TODO: Setup an user authentication system
+        var newViewController = MainViewController()
+        self.present(newViewController, animated: true, completion: nil)
     }
 }

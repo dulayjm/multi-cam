@@ -17,7 +17,7 @@ extension EntryViewController {
         entryContentView.addSubview(sluLogo)
         
         entryContentView.translatesAutoresizingMaskIntoConstraints = false
-        entryContentView.heightAnchor.constraint(equalToConstant: view.frame.height/3).isActive = true
+        entryContentView.heightAnchor.constraint(equalToConstant: view.frame.height/2).isActive = true
         
         entryContentView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         entryContentView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
@@ -45,7 +45,7 @@ extension EntryViewController {
         
         continueButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
         continueButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        continueButton.topAnchor.constraint(equalTo: entryContentView.bottomAnchor, constant: 40).isActive = true
+        continueButton.topAnchor.constraint(equalTo: entryContentView.bottomAnchor, constant: -80).isActive = true
         continueButton.centerXAnchor.constraint(equalTo: entryContentView.centerXAnchor).isActive = true
     }
     
