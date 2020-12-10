@@ -18,34 +18,50 @@ class MainViewController: UIViewController {
     }()
     
     // move to top left
-    let sluLogo:UIImageView = {
+    let sluLogoLeft:UIImageView = {
         let logo = UIImage(named: "sluvislab")
         var logoImageView = UIImageView(image: logo)
         return logoImageView
     }()
-
-//    // TODO: potentially make this RxSwift
-//    let continueButton: UIButton = {
-//        let button = UIButton(type: .system)
-//        button.setTitle("Continue", for: .normal)
-//        button.addTarget(
-//            self,
-//            action: #selector(continueButtonPressed),
-//            for: UIControl.Event.touchUpInside)
-//        return button
-//    }()
     
+    let cameraButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(named: "cameraicon"), for: .normal)
+        button.addTarget(
+            self,
+            action: #selector(cameraButtonPressed),
+            for: .touchUpInside)
+        return button
+    }()
+
+    let libraryButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Photo Library", for: .normal)
+        button.addTarget(
+            self,
+            action: #selector(libraryButtonPressed),
+            for: .touchUpInside)
+        return button
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-//        setupMainContentView()
+        setupMainContentView()
     }
     
-//    // MARK: - Navigation
-//    @objc func continueButtonPressed(_ sender:UIButton!) {
-//        print("Button tapped")
-//        // load to next screen
-//
-//    }
+    // MARK: - Navigation
+    @objc func cameraButtonPressed(_ sender:UIButton!) {
+        print("Button tapped")
+        // load to next screen
+
+    }
+    
+    @objc func libraryButtonPressed(_ sender:UIButton!) {
+        print("Button tapped")
+        // load to next screen
+
+    }
+    
 }
