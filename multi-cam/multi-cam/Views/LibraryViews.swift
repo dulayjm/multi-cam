@@ -50,8 +50,8 @@ extension LibraryViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath)
-        var imageview:UIImageView=UIImageView(frame: myCell.contentView.frame)
-        var img = imageCache[indexPath.row]
+        let imageview:UIImageView=UIImageView(frame: myCell.contentView.frame)
+        let img = imageCache[indexPath.row]
         imageview.image = img
         myCell.contentView.addSubview(imageview)
         

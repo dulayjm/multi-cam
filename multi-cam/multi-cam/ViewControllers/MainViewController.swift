@@ -54,8 +54,8 @@ class MainViewController: UIViewController {
     // MARK: - Navigation
     @objc func cameraButtonPressed(_ sender:UIButton!) {
         print("Button tapped")
-        // load to next screen
-
+        let newViewController = CameraViewController()
+        self.present(newViewController, animated: true, completion: nil)
     }
     
     @objc func libraryButtonPressed(_ sender:UIButton!) {
