@@ -15,6 +15,8 @@
 		DBBE8FFA25817F5E005F10BE /* EntryViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBE8FF925817F5E005F10BE /* EntryViews.swift */; };
 		DBBE900125818D17005F10BE /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBE900025818D17005F10BE /* MainViewController.swift */; };
 		DBBE900425818D8F005F10BE /* MainViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBE900325818D8F005F10BE /* MainViews.swift */; };
+		DBBE90072582CE71005F10BE /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBE90062582CE71005F10BE /* LibraryViewController.swift */; };
+		DBBE900A2582CF94005F10BE /* LibraryViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBE90092582CF94005F10BE /* LibraryViews.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		DBBE8FF925817F5E005F10BE /* EntryViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryViews.swift; sourceTree = "<group>"; };
 		DBBE900025818D17005F10BE /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		DBBE900325818D8F005F10BE /* MainViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViews.swift; sourceTree = "<group>"; };
+		DBBE90062582CE71005F10BE /* LibraryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
+		DBBE90092582CF94005F10BE /* LibraryViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryViews.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +81,7 @@
 			children = (
 				DBBE8FF925817F5E005F10BE /* EntryViews.swift */,
 				DBBE900325818D8F005F10BE /* MainViews.swift */,
+				DBBE90092582CF94005F10BE /* LibraryViews.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -93,6 +98,7 @@
 			children = (
 				DBBE8FF325816CAB005F10BE /* EntryViewController.swift */,
 				DBBE900025818D17005F10BE /* MainViewController.swift */,
+				DBBE90062582CE71005F10BE /* LibraryViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -166,10 +172,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DBBE900A2582CF94005F10BE /* LibraryViews.swift in Sources */,
 				DBBE8FDE25816A8C005F10BE /* AppDelegate.swift in Sources */,
 				DBBE8FE025816A8C005F10BE /* SceneDelegate.swift in Sources */,
 				DBBE8FF425816CAB005F10BE /* EntryViewController.swift in Sources */,
 				DBBE8FFA25817F5E005F10BE /* EntryViews.swift in Sources */,
+				DBBE90072582CE71005F10BE /* LibraryViewController.swift in Sources */,
 				DBBE900125818D17005F10BE /* MainViewController.swift in Sources */,
 				DBBE900425818D8F005F10BE /* MainViews.swift in Sources */,
 			);

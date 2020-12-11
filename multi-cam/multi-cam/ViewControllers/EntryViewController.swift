@@ -43,7 +43,7 @@ class EntryViewController: UIViewController {
     // MARK: - Navigation
     @objc func continueButtonPressed(_ sender:UIButton!) {
         // TODO: Setup an user authentication system
-        var newViewController = MainViewController()
+        let newViewController = MainViewController()
         self.present(newViewController, animated: true, completion: nil)
     }
 }

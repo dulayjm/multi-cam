@@ -59,9 +59,8 @@ class MainViewController: UIViewController {
     }
     
     @objc func libraryButtonPressed(_ sender:UIButton!) {
-        print("Button tapped")
-        // load to next screen
-
+        let newViewController = LibraryViewController()
+        self.present(newViewController, animated: true, completion: nil)
     }
     
 }
