@@ -26,19 +26,19 @@ extension LibraryViewController {
         self.view.bringSubviewToFront(backButton)
     }
     
-    func setupSelectButton() {
-        self.view.addSubview(selectButton)
-        selectButton.translatesAutoresizingMaskIntoConstraints = false
-        selectButton.isUserInteractionEnabled = true
-        selectButton.backgroundColor = .white
-        selectButton.tintColor = .blue
+    func setupShareButton() {
+        self.view.addSubview(shareButton)
+        shareButton.translatesAutoresizingMaskIntoConstraints = false
+        shareButton.isUserInteractionEnabled = true
+        shareButton.backgroundColor = .white
+        shareButton.tintColor = .blue
         
-        selectButton.widthAnchor.constraint(equalToConstant: 60).isActive = true
-        selectButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        selectButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
-        selectButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -30).isActive = true
+        shareButton.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        shareButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        shareButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
+        shareButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -30).isActive = true
         
-        self.view.bringSubviewToFront(selectButton)
+        self.view.bringSubviewToFront(shareButton)
     }
 }
 
@@ -59,6 +59,22 @@ extension LibraryViewController: UICollectionViewDataSource {
 extension LibraryViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("User tapped on item \(indexPath.row)")
-        // select item
+        let cell = collectionView.cellForItem(at: indexPath)
+        cell?.layer.borderWidth = 5
+        cell?.layer.borderColor = UIColor.red.cgColor
+        
+        selectedItems[indexPath.row] = cell ?? UICollectionViewCell()
+        print(selectedItems.count)
+    }
+    
+    // change background color back when user releases touch
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath)
+        cell?.layer.borderWidth = 5
+        cell?.layer.borderColor = UIColor.blue.cgColor
+        if let value = selectedItems.removeValue(forKey: indexPath.row) {
+            print("The value \(value) was removed.")
+            print(selectedItems.count)
+        }
     }
 }

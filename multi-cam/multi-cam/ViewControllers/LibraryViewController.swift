@@ -12,6 +12,7 @@ class LibraryViewController : UIViewController {
     
     // MARK: - Attributes
     var myCollectionView:UICollectionView?
+    var selectedItems = [Int:UICollectionViewCell]()
     
     let backButton: UIButton = {
         let button = UIButton(type: .system)
@@ -24,14 +25,13 @@ class LibraryViewController : UIViewController {
         return button
     }()
     
-    let selectButton: UIButton = {
+    let shareButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Share", for: .normal)
-        button.setTitle("Selected", for: .selected)
         button.tintColor = .blue
         button.addTarget(
             self,
-            action: #selector(selectButtonPressed(_:)),
+            action: #selector(shareButtonPressed(_:)),
             for: .touchUpInside)
         return button
     }()
@@ -47,15 +47,16 @@ class LibraryViewController : UIViewController {
         
         myCollectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
         myCollectionView?.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "MyCell")
+        myCollectionView?.allowsMultipleSelection = true
         myCollectionView?.backgroundColor = UIColor.white
-    
+        
         myCollectionView?.dataSource = self
         myCollectionView?.delegate = self
  
         self.view.addSubview(myCollectionView ?? UICollectionView())
         
         setupBackButton()
-        setupSelectButton()
+        setupShareButton()
     }
     
     // MARK: - Navigation
@@ -63,7 +64,27 @@ class LibraryViewController : UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
-    @objc func selectButtonPressed(_ sender:UIButton!) {
+    @objc func shareButtonPressed(_ sender:UIButton!) {
         print("button selected")
     }
+//
+//    @objc func share(sender:UIView){
+//           UIGraphicsBeginImageContext(view.frame.size)
+//           view.layer.render(in: UIGraphicsGetCurrentContext()!)
+//           let image = UIGraphicsGetImageFromCurrentImageContext()
+//           UIGraphicsEndImageContext()
+//
+//           let textToShare = "Check out my app"
+//
+//           if let myWebsite = URL(string: "http://itunes.apple.com/app/idXXXXXXXXX") {//Enter link to your app here
+//               let objectsToShare = [textToShare, myWebsite, image ?? #imageLiteral(resourceName: "app-logo")] as [Any]
+//               let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+//
+//               //Excluded Activities
+//               activityVC.excludedActivityTypes = [UIActivity.ActivityType.airDrop, UIActivity.ActivityType.addToReadingList]
+//               //
+//
+//               activityVC.popoverPresentationController?.sourceView = sender
+//               self.present(activityVC, animated: true, completion: nil)
+//           }    }
 }
