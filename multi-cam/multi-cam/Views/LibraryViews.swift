@@ -45,12 +45,16 @@ extension LibraryViewController {
 // Datasource Extension
 extension LibraryViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 12
+        return imageCache.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath)
-        myCell.backgroundColor = UIColor.blue
+        var imageview:UIImageView=UIImageView(frame: myCell.contentView.frame)
+        var img = imageCache[indexPath.row]
+        imageview.image = img
+        myCell.contentView.addSubview(imageview)
+        
         return myCell
     }
 }
@@ -70,8 +74,7 @@ extension LibraryViewController: UICollectionViewDelegate {
     // change background color back when user releases touch
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath)
-        cell?.layer.borderWidth = 5
-        cell?.layer.borderColor = UIColor.blue.cgColor
+        cell?.layer.borderWidth = 0
         if let value = selectedItems.removeValue(forKey: indexPath.row) {
             print("The value \(value) was removed.")
             print(selectedItems.count)

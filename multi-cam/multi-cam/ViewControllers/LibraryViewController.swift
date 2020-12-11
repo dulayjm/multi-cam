@@ -13,6 +13,7 @@ class LibraryViewController : UIViewController {
     // MARK: - Attributes
     var myCollectionView:UICollectionView?
     var selectedItems = [Int:UICollectionViewCell]()
+    var imageCache = [Int:UIImage]()
     
     let backButton: UIButton = {
         let button = UIButton(type: .system)
@@ -49,6 +50,15 @@ class LibraryViewController : UIViewController {
         myCollectionView?.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "MyCell")
         myCollectionView?.allowsMultipleSelection = true
         myCollectionView?.backgroundColor = UIColor.white
+        
+        // dummy cache for loading
+        // normally grab from model
+        let logo1 = UIImage(named: "sluvislab")
+        let dog1 = UIImage(named: "dog1")
+        let dog2 = UIImage(named: "dog2")
+        imageCache[0] = logo1
+        imageCache[1] = dog1
+        imageCache[2] = dog2
         
         myCollectionView?.dataSource = self
         myCollectionView?.delegate = self
