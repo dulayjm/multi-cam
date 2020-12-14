@@ -53,7 +53,6 @@ class MainViewController: UIViewController {
     
     // MARK: - Navigation
     @objc func cameraButtonPressed(_ sender:UIButton!) {
-        print("Button tapped")
         let newViewController = CameraViewController()
         self.present(newViewController, animated: true, completion: nil)
     }
