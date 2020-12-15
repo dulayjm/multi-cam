@@ -14,6 +14,7 @@ class LibraryViewController : UIViewController {
     var myCollectionView:UICollectionView?
     var selectedItems = [Int:UICollectionViewCell]()
     var imageCache = [Int:UIImage]()
+//    var imageCache = [Int:UIImage]()
     
     let backButton: UIButton = {
         let button = UIButton(type: .system)
@@ -37,8 +38,12 @@ class LibraryViewController : UIViewController {
         return button
     }()
     
+    private let dataModel = DataModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+//        dataModel.delegate = self
         
         self.view.backgroundColor = .white
         
@@ -53,6 +58,9 @@ class LibraryViewController : UIViewController {
         
         // dummy cache for loading
         // normally grab from model
+//        imageCache = loadImagesFromDataModel()
+//        imageCache = dataModel.loadImages()
+        
         let logo1 = UIImage(named: "sluvislab")
         let dog1 = UIImage(named: "dog1")
         let dog2 = UIImage(named: "dog2")
@@ -77,24 +85,10 @@ class LibraryViewController : UIViewController {
     @objc func shareButtonPressed(_ sender:UIButton!) {
         print("button selected")
     }
-//
-//    @objc func share(sender:UIView){
-//           UIGraphicsBeginImageContext(view.frame.size)
-//           view.layer.render(in: UIGraphicsGetCurrentContext()!)
-//           let image = UIGraphicsGetImageFromCurrentImageContext()
-//           UIGraphicsEndImageContext()
-//
-//           let textToShare = "Check out my app"
-//
-//           if let myWebsite = URL(string: "http://itunes.apple.com/app/idXXXXXXXXX") {//Enter link to your app here
-//               let objectsToShare = [textToShare, myWebsite, image ?? #imageLiteral(resourceName: "app-logo")] as [Any]
-//               let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
-//
-//               //Excluded Activities
-//               activityVC.excludedActivityTypes = [UIActivity.ActivityType.airDrop, UIActivity.ActivityType.addToReadingList]
-//               //
-//
-//               activityVC.popoverPresentationController?.sourceView = sender
-//               self.present(activityVC, animated: true, completion: nil)
-//           }    }
+}
+
+extension LibraryViewController: DataModelDelegate {
+    func didSendDataUpdate(data: AnyObject) {
+        self.imageCache = data as! [Int : UIImage]
+    }
 }

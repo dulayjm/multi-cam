@@ -190,6 +190,8 @@ class PhotoPreviewView: UIView {
         return button
     }()
     
+    private let dataModel = DataModel()
+    var senderDelegate: DataModelDelegate? = nil
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -216,16 +218,19 @@ class PhotoPreviewView: UIView {
     @objc private func handleSavePhoto() {
         
         guard let previewImage = self.photoImageView.image else { return }
-        var model = LibraryModel()
         
         PHPhotoLibrary.requestAuthorization { (status) in
             if status == .authorized {
                 do {
                     try PHPhotoLibrary.shared().performChangesAndWait {
-                        model.imageCache[0] = previewImage
+                        
+                        if self.senderDelegate != nil {
+//                            self.dataModel.requestData(image: previewImage)
+                            self.senderDelegate?.didSendDataUpdate(data: previewImage)
+                        }
+                        // comment out this next line if you don't want to save to camera row
                         PHAssetChangeRequest.creationRequestForAsset(from: previewImage)
                         print("photo has saved in library...")
-                        print(model.imageCache.count)
                         self.handleCancel()
                     }
                 } catch let error {
@@ -238,3 +243,8 @@ class PhotoPreviewView: UIView {
     }
 }
     
+//extension PhotoPreviewView: DataModelDelegate {
+//    func didSendDataUpdate(data: AnyObject) {
+//        print("Model received image data.")
+//    }
+//}
