@@ -12,14 +12,14 @@ import UIKit
 // TODO: Save images from camera functions
 
 class DataModel {
-    weak var delegate: DataModelDelegate?
+//    weak var delegate: DataModelDelegate?
     var imageCache = [Int:UIImage]()
 
     func requestData(image: UIImage) {
         print("here")
         imageCache.updateValue(image, forKey: imageCache.count)
         print(imageCache.count)
-        delegate?.didSendDataUpdate(data: image)
+//        delegate?.didSendDataUpdate(data: image)
     }
     
     func loadImages() -> [Int:UIImage] {
@@ -31,6 +31,6 @@ class DataModel {
     
 }
 
-protocol DataModelDelegate: class {
-    func didSendDataUpdate(data: AnyObject)
+protocol DataModelDelegate {
+    func didSendDataUpdate(data: [Int:UIImage])
 }

@@ -44,6 +44,9 @@ class LibraryViewController : UIViewController {
         super.viewDidLoad()
         
 //        dataModel.delegate = self
+//        LibraryViewController.delegate = self
+        
+        
         
         self.view.backgroundColor = .white
         
@@ -61,12 +64,12 @@ class LibraryViewController : UIViewController {
 //        imageCache = loadImagesFromDataModel()
 //        imageCache = dataModel.loadImages()
         
-        let logo1 = UIImage(named: "sluvislab")
-        let dog1 = UIImage(named: "dog1")
-        let dog2 = UIImage(named: "dog2")
-        imageCache[0] = logo1
-        imageCache[1] = dog1
-        imageCache[2] = dog2
+//        let logo1 = UIImage(named: "sluvislab")
+//        let dog1 = UIImage(named: "dog1")
+//        let dog2 = UIImage(named: "dog2")
+//        imageCache[0] = logo1
+//        imageCache[1] = dog1
+//        imageCache[2] = dog2
         
         myCollectionView?.dataSource = self
         myCollectionView?.delegate = self
@@ -87,8 +90,8 @@ class LibraryViewController : UIViewController {
     }
 }
 
-extension LibraryViewController: DataModelDelegate {
-    func didSendDataUpdate(data: AnyObject) {
-        self.imageCache = data as! [Int : UIImage]
-    }
-}
+//extension LibraryViewController: DataModelDelegate {
+//    func didSendDataUpdate(data: [Int : UIImage]) {
+//        self.imageCache = data
+//    }
+//}
