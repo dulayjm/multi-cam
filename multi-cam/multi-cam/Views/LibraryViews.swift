@@ -81,9 +81,3 @@ extension LibraryViewController: UICollectionViewDelegate {
         }
     }
 }
-
-extension LibraryViewController: smallDelegate {
-    func smallDataReceived(data: UIImage) {
-        self.imageCache.updateValue(data, forKey: self.imageCache.count)
-    }
-}

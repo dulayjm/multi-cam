@@ -53,7 +53,7 @@ class MainViewController: UIViewController {
     
     // MARK: - Navigation
     @objc func cameraButtonPressed(_ sender:UIButton!) {
-        let newViewController = CameraViewController()
+        let newViewController = MultiSession()
         self.present(newViewController, animated: true, completion: nil)
     }
     
