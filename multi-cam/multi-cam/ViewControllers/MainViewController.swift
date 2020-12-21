@@ -44,6 +44,7 @@ class MainViewController: UIViewController {
         return button
     }()
 
+    // MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -53,7 +54,7 @@ class MainViewController: UIViewController {
     
     // MARK: - Navigation
     @objc func cameraButtonPressed(_ sender:UIButton!) {
-        let newViewController = MultiSession()
+        let newViewController = CameraViewController()
         self.present(newViewController, animated: true, completion: nil)
     }
     

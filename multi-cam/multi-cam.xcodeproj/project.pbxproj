@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DBA284E6258D375B0006F326 /* multiSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA284E5258D375A0006F326 /* multiSession.swift */; };
+		DBA284EA259102D10006F326 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA284E9259102D10006F326 /* CameraView.swift */; };
 		DBBE8FDE25816A8C005F10BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBE8FDD25816A8C005F10BE /* AppDelegate.swift */; };
 		DBBE8FE025816A8C005F10BE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBE8FDF25816A8C005F10BE /* SceneDelegate.swift */; };
 		DBBE8FE725816A8D005F10BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DBBE8FE625816A8D005F10BE /* Assets.xcassets */; };
@@ -23,7 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		DBA284E5258D375A0006F326 /* multiSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = multiSession.swift; sourceTree = "<group>"; };
+		DBA284E9259102D10006F326 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		DBBE8FDA25816A8C005F10BE /* multi-cam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "multi-cam.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBBE8FDD25816A8C005F10BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DBBE8FDF25816A8C005F10BE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -88,6 +88,7 @@
 				DBBE8FF925817F5E005F10BE /* EntryViews.swift */,
 				DBBE900325818D8F005F10BE /* MainViews.swift */,
 				DBBE90092582CF94005F10BE /* LibraryViews.swift */,
+				DBA284E9259102D10006F326 /* CameraView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -107,7 +108,6 @@
 				DBBE900025818D17005F10BE /* MainViewController.swift */,
 				DBBE90062582CE71005F10BE /* LibraryViewController.swift */,
 				DBBE900F258426EC005F10BE /* CameraViewController.swift */,
-				DBA284E5258D375A0006F326 /* multiSession.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -181,7 +181,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DBA284E6258D375B0006F326 /* multiSession.swift in Sources */,
 				DBBE900A2582CF94005F10BE /* LibraryViews.swift in Sources */,
 				DBBE9010258426EC005F10BE /* CameraViewController.swift in Sources */,
 				DBBE8FDE25816A8C005F10BE /* AppDelegate.swift in Sources */,
@@ -189,6 +188,7 @@
 				DBBE8FF425816CAB005F10BE /* EntryViewController.swift in Sources */,
 				DBBE8FFA25817F5E005F10BE /* EntryViews.swift in Sources */,
 				DBBE90072582CE71005F10BE /* LibraryViewController.swift in Sources */,
+				DBA284EA259102D10006F326 /* CameraView.swift in Sources */,
 				DBBE900125818D17005F10BE /* MainViewController.swift in Sources */,
 				DBBE900D25841D80005F10BE /* DataModel.swift in Sources */,
 				DBBE900425818D8F005F10BE /* MainViews.swift in Sources */,
