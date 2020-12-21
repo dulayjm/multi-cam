@@ -2,7 +2,7 @@
 //  CameraViewController.swift
 //  multi-cam
 //
-//  Created by Justin Dulay on 12/11/20.
+//  Created by Justin Dulay on 12/18/20.
 //
 
 import UIKit
@@ -11,7 +11,7 @@ import Photos
 
 class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
-    // MARK: - Variables
+    // MARK: - Attributes
     lazy private var backButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "xmark"), for: .normal)
@@ -28,20 +28,18 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     }()
     
     private let photoOutput = AVCapturePhotoOutput()
+    private let photoOutput2 = AVCapturePhotoOutput()
+    private let photoOutput3 = AVCapturePhotoOutput()
     private var imageCache = [Int:UIImage]()
-//    var modelDelegate: DataModelDelegate?
-//    var smallDelegate: smallDelegate?
-//
+
     // MARK: - View LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         openCamera()
     }
     
-    
     // MARK: - Private Methods
     private func setupUI() {
-        
         view.addSubviews(backButton, takePhotoButton)
         
         takePhotoButton.makeConstraints(top: nil, left: nil, right: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor, topMargin: 0, leftMargin: 0, rightMargin: 0, bottomMargin: 15, width: 80, height: 80)
@@ -85,10 +83,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     private func setupCaptureSession() {
         let captureSession = AVCaptureMultiCamSession()
         
-        
-        // here look at other devices
         // builtInWideAngleCamera, builtInUltraWideCamera, builtInTelephotoCamera
-        if let captureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: AVMediaType.video, position: .back) {
+        if let captureDevice = AVCaptureDevice.default(.builtInTelephotoCamera, for: AVMediaType.video, position: .back) {
             do {
                 let input = try AVCaptureDeviceInput(device: captureDevice)
                 if captureSession.canAddInput(input) {
@@ -101,68 +97,50 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
             if captureSession.canAddOutput(photoOutput) {
                 captureSession.addOutput(photoOutput)
             }
+        }
+        
+        if let captureDevice2 = AVCaptureDevice.default(.builtInUltraWideCamera, for: AVMediaType.video, position: .back) {
+            do {
+                let input2 = try AVCaptureDeviceInput(device: captureDevice2)
+                if captureSession.canAddInput(input2) {
+                    captureSession.addInput(input2)
+                }
+            } catch let error {
+                print("Failed to set input device with error: \(error)")
+            }
+            
+            if captureSession.canAddOutput(photoOutput2) {
+                captureSession.addOutput(photoOutput2)
+            }
+        }
+        
+        if let captureDevice3 = AVCaptureDevice.default(.builtInWideAngleCamera, for: AVMediaType.video, position: .back) {
+            do {
+                let input3 = try AVCaptureDeviceInput(device: captureDevice3)
+                if captureSession.canAddInput(input3) {
+                    captureSession.addInput(input3)
+                }
+            } catch let error {
+                print("Failed to set input device with error: \(error)")
+            }
+            
+            if captureSession.canAddOutput(photoOutput3) {
+                captureSession.addOutput(photoOutput3)
+            }
             
             let cameraLayer = AVCaptureVideoPreviewLayer(session: captureSession)
             cameraLayer.frame = self.view.frame
             cameraLayer.videoGravity = .resizeAspectFill
             self.view.layer.addSublayer(cameraLayer)
         }
-        
-        // in addition to our first camera, we want to also add the other two?
-        if let captureDevice2 = AVCaptureDevice.default(.builtInUltraWideCamera, for: AVMediaType.video, position: .back) {
-            do {
-                let input = try AVCaptureDeviceInput(device: captureDevice2)
-                print(captureSession.canAddInput(input))
-                if captureSession.canAddInput(input) {
-                    captureSession.addInput(input)
-                }
-            } catch let error {
-                print("Failed to set input device with error: \(error)")
-            }
-            
-//            if captureSession.canAddOutput(photoOutput) {
-//                captureSession.addOutput(photoOutput)
-//            }
-            
-//            let cameraLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-//            cameraLayer.frame = self.view.frame
-//            cameraLayer.videoGravity = .resizeAspectFill
-//            self.view.layer.addSublayer(cameraLayer)
-        }
-        
-        if let captureDevice3 = AVCaptureDevice.default(.builtInTelephotoCamera, for: AVMediaType.video, position: .back) {
-            do {
-                let input = try AVCaptureDeviceInput(device: captureDevice3)
-                print(captureSession.canAddInput(input))
-                if captureSession.canAddInput(input) {
-                    captureSession.addInput(input)
-                }
-            } catch let error {
-                print("Failed to set input device with error: \(error)")
-            }
-            
-//            if captureSession.canAddOutput(photoOutput) {
-//                captureSession.addOutput(photoOutput)
-//            }
-            
-//            let cameraLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-//            cameraLayer.frame = self.view.frame
-//            cameraLayer.videoGravity = .resizeAspectFill
-//            self.view.layer.addSublayer(cameraLayer)
-        }
-        
-        
-        
+
         print("number of capture session inputs", captureSession.inputs.count)
+        print("number of capture session outputs", captureSession.outputs.count)
         captureSession.startRunning()
         self.setupUI()
     }
     
     @objc private func handleDismiss() {
-//        if self.modelDelegate != nil {
-//            print("here")
-//            self.modelDelegate?.didSendDataUpdate(data: self.imageCache)
-//        }
         DispatchQueue.main.async {
             self.dismiss(animated: true, completion: nil)
         }
@@ -173,143 +151,31 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         if let photoPreviewType = photoSettings.availablePreviewPhotoPixelFormatTypes.first {
             photoSettings.previewPhotoFormat = [kCVPixelBufferPixelFormatTypeKey as String: photoPreviewType]
             photoOutput.capturePhoto(with: photoSettings, delegate: self)
+            photoOutput2.capturePhoto(with: photoSettings, delegate: self)
+            photoOutput3.capturePhoto(with: photoSettings, delegate: self)
         }
     }
     
+    // Delegate Method
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         guard let imageData = photo.fileDataRepresentation() else { return }
         let previewImage = UIImage(data: imageData)
         
         let photoPreviewContainer = PhotoPreviewView(frame: self.view.frame)
-//        photoPreviewContainer.delegate = self
         photoPreviewContainer.photoImageView.image = previewImage
         self.view.addSubviews(photoPreviewContainer)
     }
 }
 
-//extension CameraViewController: smallDelegate {
-//    func smallDataReceived(data: AnyObject) {
-//        self.imageCache.updateValue(data as! UIImage, forKey: self.imageCache.count)
-//    }
-//}
-
-extension UIView {
-    
-    func makeConstraints(top: NSLayoutYAxisAnchor?, left: NSLayoutXAxisAnchor?, right: NSLayoutXAxisAnchor?, bottom: NSLayoutYAxisAnchor?, topMargin: CGFloat, leftMargin: CGFloat, rightMargin: CGFloat, bottomMargin: CGFloat, width: CGFloat, height: CGFloat) {
-        
-        self.translatesAutoresizingMaskIntoConstraints = false
-        if let top = top {
-            self.topAnchor.constraint(equalTo: top, constant: topMargin).isActive = true
-        }
-        
-        if let left = left {
-            self.leftAnchor.constraint(equalTo: left, constant: leftMargin).isActive = true
-        }
-        
-        if let right = right {
-            self.rightAnchor.constraint(equalTo: right, constant: -rightMargin).isActive = true
-        }
-        
-        if let bottom = bottom {
-            self.bottomAnchor.constraint(equalTo: bottom, constant: -bottomMargin).isActive = true
-        }
-        
-        if width != 0 {
-            self.widthAnchor.constraint(equalToConstant: width).isActive = true
-        }
-        
-        if height != 0 {
-            self.heightAnchor.constraint(equalToConstant: height).isActive = true
-        }
+// Extended delegate to handle multiple different outputs on the same instance
+extension AVCapturePhotoCaptureDelegate {
+    func photoOutput2(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        guard let imageData = photo.fileDataRepresentation() else { return }
+        let previewImage = UIImage(data: imageData)
     }
     
-    func addSubviews(_ views: UIView...) {
-        views.forEach{ addSubview($0) }
+    func photoOutput3(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        guard let imageData = photo.fileDataRepresentation() else { return }
+        let previewImage = UIImage(data: imageData)
     }
 }
-
-class PhotoPreviewView: UIView {
-    
-    let photoImageView: UIImageView = {
-        let imageView = UIImageView(frame: .zero)
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        return imageView
-    }()
-    
-    lazy private var cancelButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "xmark"), for: .normal)
-        button.addTarget(self, action: #selector(handleCancel), for: .touchUpInside)
-        button.tintColor = .white
-        return button
-    }()
-    
-    lazy private var savePhotoButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "square.and.arrow.down"), for: .normal)
-        button.addTarget(self, action: #selector(handleSavePhoto), for: .touchUpInside)
-        button.tintColor = .white
-        return button
-    }()
-    
-    private let dataModel = DataModel()
-    var smallDelegate: smallDelegate?
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        
-        addSubviews(photoImageView, cancelButton, savePhotoButton)
-        
-        photoImageView.makeConstraints(top: topAnchor, left: leftAnchor, right: rightAnchor, bottom: bottomAnchor, topMargin: 0, leftMargin: 0, rightMargin: 0, bottomMargin: 0, width: 0, height: 0)
-        
-        cancelButton.makeConstraints(top: safeAreaLayoutGuide.topAnchor, left: nil, right: rightAnchor, bottom: nil, topMargin: 15, leftMargin: 0, rightMargin: 10, bottomMargin: 0, width: 50, height: 50)
-        
-        savePhotoButton.makeConstraints(top: nil, left: nil, right: cancelButton.leftAnchor, bottom: nil, topMargin: 0, leftMargin: 0, rightMargin: 5, bottomMargin: 0, width: 50, height: 50)
-        savePhotoButton.centerYAnchor.constraint(equalTo: cancelButton.centerYAnchor).isActive = true
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-    }
-    
-    @objc private func handleCancel() {
-        DispatchQueue.main.async {
-            self.removeFromSuperview()
-        }
-    }
-    
-    @objc private func handleSavePhoto() {
-        
-        guard let previewImage = self.photoImageView.image else { return }
-        
-        PHPhotoLibrary.requestAuthorization { (status) in
-            if status == .authorized {
-                do {
-                    try PHPhotoLibrary.shared().performChangesAndWait {
-                        self.smallDelegate?.smallDataReceived(data: previewImage)
-                        // comment out this next line if you don't want to save to camera row
-                        PHAssetChangeRequest.creationRequestForAsset(from: previewImage)
-                        print("photo has saved in library...")
-                        self.handleCancel()
-                    }
-                } catch let error {
-                    print("failed to save photo in library: ", error)
-                }
-            } else {
-                print("Something went wrong with permission...")
-            }
-        }
-    }
-}
-
-protocol smallDelegate {
-    func smallDataReceived(data: UIImage)
-}
-    
-//extension PhotoPreviewView: DataModelDelegate {
-//    func didSendDataUpdate(data: AnyObject) {
-//        print("Model received image data.")
-//    }
-//}
