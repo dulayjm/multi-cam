@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 // create some dummy values from xcassets
-// TODO: Save images from camera functions
+// TODO: Persist to core data, reactive bind, or send through an API
 
 class DataModel {
 //    weak var delegate: DataModelDelegate?

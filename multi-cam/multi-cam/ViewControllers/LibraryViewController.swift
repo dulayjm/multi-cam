@@ -14,7 +14,6 @@ class LibraryViewController : UIViewController {
     var myCollectionView:UICollectionView?
     var selectedItems = [Int:UICollectionViewCell]()
     var imageCache = [Int:UIImage]()
-//    var imageCache = [Int:UIImage]()
     
     let backButton: UIButton = {
         let button = UIButton(type: .system)
@@ -44,11 +43,6 @@ class LibraryViewController : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        dataModel.delegate = self
-//        LibraryViewController.delegate = self
-        
-        
-        
         self.view.backgroundColor = .white
         
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
@@ -60,17 +54,6 @@ class LibraryViewController : UIViewController {
         myCollectionView?.allowsMultipleSelection = true
         myCollectionView?.backgroundColor = UIColor.white
         
-        // dummy cache for loading
-        // normally grab from model
-//        imageCache = loadImagesFromDataModel()
-//        imageCache = dataModel.loadImages()
-        
-//        let logo1 = UIImage(named: "sluvislab")
-//        let dog1 = UIImage(named: "dog1")
-//        let dog2 = UIImage(named: "dog2")
-//        imageCache[0] = logo1
-//        imageCache[1] = dog1
-//        imageCache[2] = dog2
         
         myCollectionView?.dataSource = self
         myCollectionView?.delegate = self
@@ -90,9 +73,3 @@ class LibraryViewController : UIViewController {
         print("button selected")
     }
 }
-
-//extension LibraryViewController: DataModelDelegate {
-//    func didSendDataUpdate(data: [Int : UIImage]) {
-//        self.imageCache = data
-//    }
-//}

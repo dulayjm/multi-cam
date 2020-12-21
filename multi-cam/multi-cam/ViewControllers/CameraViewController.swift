@@ -9,6 +9,8 @@ import UIKit
 import AVFoundation
 import Photos
 
+var imageCache = [Int:UIImage]()
+
 class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
     // MARK: - Attributes
@@ -30,7 +32,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     private let photoOutput = AVCapturePhotoOutput()
     private let photoOutput2 = AVCapturePhotoOutput()
     private let photoOutput3 = AVCapturePhotoOutput()
-    private var imageCache = [Int:UIImage]()
+    var callback : (([Int:UIImage])->())?
 
     // MARK: - View LifeCycle
     override func viewDidLoad() {
@@ -142,6 +144,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
     @objc private func handleDismiss() {
         DispatchQueue.main.async {
+            self.callback?(imageCache)
             self.dismiss(animated: true, completion: nil)
         }
     }
@@ -160,7 +163,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         guard let imageData = photo.fileDataRepresentation() else { return }
         let previewImage = UIImage(data: imageData)
-        
+        imageCache.updateValue(previewImage ?? UIImage(), forKey: imageCache.count)
+
         let photoPreviewContainer = PhotoPreviewView(frame: self.view.frame)
         photoPreviewContainer.photoImageView.image = previewImage
         self.view.addSubviews(photoPreviewContainer)
@@ -172,10 +176,12 @@ extension AVCapturePhotoCaptureDelegate {
     func photoOutput2(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         guard let imageData = photo.fileDataRepresentation() else { return }
         let previewImage = UIImage(data: imageData)
+        imageCache.updateValue(previewImage ?? UIImage(), forKey: imageCache.count)
     }
     
     func photoOutput3(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         guard let imageData = photo.fileDataRepresentation() else { return }
         let previewImage = UIImage(data: imageData)
+        imageCache.updateValue(previewImage ?? UIImage(), forKey: imageCache.count)
     }
 }

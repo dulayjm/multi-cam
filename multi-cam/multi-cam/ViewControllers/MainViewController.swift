@@ -43,6 +43,7 @@ class MainViewController: UIViewController {
             for: .touchUpInside)
         return button
     }()
+    private var imageCache = [Int:UIImage]()
 
     // MARK: - View Lifecycle
     override func viewDidLoad() {
@@ -56,11 +57,14 @@ class MainViewController: UIViewController {
     @objc func cameraButtonPressed(_ sender:UIButton!) {
         let newViewController = CameraViewController()
         self.present(newViewController, animated: true, completion: nil)
+        newViewController.callback = { result in
+            self.imageCache = result
+        }
     }
     
     @objc func libraryButtonPressed(_ sender:UIButton!) {
         let newViewController = LibraryViewController()
+        newViewController.imageCache = self.imageCache
         self.present(newViewController, animated: true, completion: nil)
     }
-    
 }
