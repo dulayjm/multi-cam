@@ -183,7 +183,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     func metadataOutput(_ captureOutput: AVCaptureMetadataOutput,
                         didOutput metadataObjects: [AVMetadataObject],
                         from connection: AVCaptureConnection) {
-        // Check if the metadataObjects array is contains at least one object.
         if metadataObjects.count == 0 {
             return
         }
@@ -196,10 +195,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
                 DispatchQueue.main.async {
                     print(outputString)
                     qrCodeLabelTextGrouping.append(outputString)
-//                    let alertVC = UIAlertController()
-//                    alertVC.title = outputString
-//                    self.present(alertVC, animated: true, completion: nil)
-    //              self.lblOutput.text = outputString
                 }
             }
         }

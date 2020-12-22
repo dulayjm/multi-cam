@@ -44,7 +44,7 @@ class MainViewController: UIViewController {
         return button
     }()
     private var imageCache = [Int:UIImage]()
-    private var qrStrings = [String]()
+    private var qrLabels = [String]()
 
     // MARK: - View Lifecycle
     override func viewDidLoad() {
@@ -58,11 +58,12 @@ class MainViewController: UIViewController {
     @objc func cameraButtonPressed(_ sender:UIButton!) {
         let newViewController = CameraViewController()
         self.present(newViewController, animated: true, completion: nil)
-        newViewController.callback = { result in
-            self.imageCache = result
-            self.qrStrings = result
+        newViewController.callback = { images, labels in
+            self.imageCache = images
+            self.qrLabels = labels
+            // TODO: send labels to model or API when you get the chance later
         }
-        print(self.qrStrings)
+        print(self.qrLabels)
     }
     
     @objc func libraryButtonPressed(_ sender:UIButton!) {
