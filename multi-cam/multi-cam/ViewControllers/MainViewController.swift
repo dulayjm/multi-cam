@@ -44,6 +44,7 @@ class MainViewController: UIViewController {
         return button
     }()
     private var imageCache = [Int:UIImage]()
+    private var qrStrings = [String]()
 
     // MARK: - View Lifecycle
     override func viewDidLoad() {
@@ -59,7 +60,9 @@ class MainViewController: UIViewController {
         self.present(newViewController, animated: true, completion: nil)
         newViewController.callback = { result in
             self.imageCache = result
+            self.qrStrings = result
         }
+        print(self.qrStrings)
     }
     
     @objc func libraryButtonPressed(_ sender:UIButton!) {

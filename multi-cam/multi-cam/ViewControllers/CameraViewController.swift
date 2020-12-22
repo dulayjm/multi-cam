@@ -10,8 +10,9 @@ import AVFoundation
 import Photos
 
 var imageCache = [Int:UIImage]()
+var qrCodeLabelTextGrouping = [String]()
 
-class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
+class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVCaptureMetadataOutputObjectsDelegate {
     
     // MARK: - Attributes
     lazy private var backButton: UIButton = {
@@ -32,7 +33,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     private let photoOutput = AVCapturePhotoOutput()
     private let photoOutput2 = AVCapturePhotoOutput()
     private let photoOutput3 = AVCapturePhotoOutput()
-    var callback : (([Int:UIImage])->())?
+    var callback : (([Int:UIImage], [String])->())?
 
     // MARK: - View LifeCycle
     override func viewDidLoad() {
@@ -136,6 +137,14 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
             self.view.layer.addSublayer(cameraLayer)
         }
 
+        // Initialize a AVCaptureMetadataOutput object and set it as the input device
+        let captureMetadataOutput = AVCaptureMetadataOutput()
+        captureSession.addOutput(captureMetadataOutput)
+              
+        // Set delegate and use the default dispatch queue to execute the call back
+        captureMetadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
+        captureMetadataOutput.metadataObjectTypes = [AVMetadataObject.ObjectType.qr]
+        
         print("number of capture session inputs", captureSession.inputs.count)
         print("number of capture session outputs", captureSession.outputs.count)
         captureSession.startRunning()
@@ -144,7 +153,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
     @objc private func handleDismiss() {
         DispatchQueue.main.async {
-            self.callback?(imageCache)
+            self.callback?(imageCache, qrCodeLabelTextGrouping)
             self.dismiss(animated: true, completion: nil)
         }
     }
@@ -168,6 +177,32 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         let photoPreviewContainer = PhotoPreviewView(frame: self.view.frame)
         photoPreviewContainer.photoImageView.image = previewImage
         self.view.addSubviews(photoPreviewContainer)
+    }
+    
+    // Delegate Method - metadata attributes
+    func metadataOutput(_ captureOutput: AVCaptureMetadataOutput,
+                        didOutput metadataObjects: [AVMetadataObject],
+                        from connection: AVCaptureConnection) {
+        // Check if the metadataObjects array is contains at least one object.
+        if metadataObjects.count == 0 {
+            return
+        }
+        
+        // Get the metadata object.
+        let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
+        
+        if metadataObj.type == AVMetadataObject.ObjectType.qr {
+            if let outputString = metadataObj.stringValue {
+                DispatchQueue.main.async {
+                    print(outputString)
+                    qrCodeLabelTextGrouping.append(outputString)
+//                    let alertVC = UIAlertController()
+//                    alertVC.title = outputString
+//                    self.present(alertVC, animated: true, completion: nil)
+    //              self.lblOutput.text = outputString
+                }
+            }
+        }
     }
 }
 
