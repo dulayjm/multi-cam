@@ -34,7 +34,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     private let photoOutput2 = AVCapturePhotoOutput()
     private let photoOutput3 = AVCapturePhotoOutput()
     var callback : (([Int:UIImage], [String])->())?
-
+    var colorCube = ColorCube()
+    
     // MARK: - View LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -172,6 +173,23 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         guard let imageData = photo.fileDataRepresentation() else { return }
         let previewImage = UIImage(data: imageData)
+        
+        
+        var extractedColors:NSArray
+//        extractedColors = [_colorCube extractBrightColorsFromImage:image avoidColor:nil count:4];
+        extractedColors = colorCube.extractBrightColors(from: previewImage ?? UIImage(), avoid: .blue, count: 4) as! NSArray // UIColor empty constructor == nil ...
+        
+        print("Here daddy")
+        print(extractedColors[0])
+        let temp = UIViewController()
+        temp.view.backgroundColor = extractedColors[0] as! UIColor
+        self.present(temp, animated: true, completion: nil)
+        
+        // present a table view to demonstrate the colors ...
+        
+        
+        
+        
         imageCache.updateValue(previewImage ?? UIImage(), forKey: imageCache.count)
 
         let photoPreviewContainer = PhotoPreviewView(frame: self.view.frame)
@@ -195,6 +213,13 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
                 DispatchQueue.main.async {
                     print(outputString)
                     qrCodeLabelTextGrouping.append(outputString)
+                    let alertVC = UIAlertController()
+                    alertVC.title = outputString
+                    self.present(alertVC, animated: false, completion: nil)
+                    alertVC.modalPresentationStyle = .overFullScreen
+                    alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+                    alertVC.removeFromParent()
+                    alertVC.dismiss(animated: false, completion: nil)
                 }
             }
         }
