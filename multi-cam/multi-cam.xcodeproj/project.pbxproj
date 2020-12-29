@@ -10,6 +10,8 @@
 		DBA284EA259102D10006F326 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA284E9259102D10006F326 /* CameraView.swift */; };
 		DBA284F42593D3670006F326 /* ColorCube.m in Sources */ = {isa = PBXBuildFile; fileRef = DBA284F32593D3670006F326 /* ColorCube.m */; };
 		DBA284F82593D4340006F326 /* CCLocalMaximum.m in Sources */ = {isa = PBXBuildFile; fileRef = DBA284F72593D4340006F326 /* CCLocalMaximum.m */; };
+		DBA284FC259573DD0006F326 /* ColorsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA284FB259573DD0006F326 /* ColorsViewController.swift */; };
+		DBA28500259B83EE0006F326 /* ColorViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA284FF259B83EE0006F326 /* ColorViews.swift */; };
 		DBBE8FDE25816A8C005F10BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBE8FDD25816A8C005F10BE /* AppDelegate.swift */; };
 		DBBE8FE025816A8C005F10BE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBE8FDF25816A8C005F10BE /* SceneDelegate.swift */; };
 		DBBE8FE725816A8D005F10BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DBBE8FE625816A8D005F10BE /* Assets.xcassets */; };
@@ -31,6 +33,8 @@
 		DBA284F32593D3670006F326 /* ColorCube.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ColorCube.m; sourceTree = "<group>"; };
 		DBA284F62593D4100006F326 /* CCLocalMaximum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCLocalMaximum.h; sourceTree = "<group>"; };
 		DBA284F72593D4340006F326 /* CCLocalMaximum.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CCLocalMaximum.m; sourceTree = "<group>"; };
+		DBA284FB259573DD0006F326 /* ColorsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorsViewController.swift; sourceTree = "<group>"; };
+		DBA284FF259B83EE0006F326 /* ColorViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorViews.swift; sourceTree = "<group>"; };
 		DBBE8FDA25816A8C005F10BE /* multi-cam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "multi-cam.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBBE8FDD25816A8C005F10BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DBBE8FDF25816A8C005F10BE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -109,6 +113,7 @@
 				DBBE900325818D8F005F10BE /* MainViews.swift */,
 				DBBE90092582CF94005F10BE /* LibraryViews.swift */,
 				DBA284E9259102D10006F326 /* CameraView.swift */,
+				DBA284FF259B83EE0006F326 /* ColorViews.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -128,6 +133,7 @@
 				DBBE900025818D17005F10BE /* MainViewController.swift */,
 				DBBE90062582CE71005F10BE /* LibraryViewController.swift */,
 				DBBE900F258426EC005F10BE /* CameraViewController.swift */,
+				DBA284FB259573DD0006F326 /* ColorsViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -202,8 +208,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DBA284FC259573DD0006F326 /* ColorsViewController.swift in Sources */,
 				DBBE900A2582CF94005F10BE /* LibraryViews.swift in Sources */,
 				DBBE9010258426EC005F10BE /* CameraViewController.swift in Sources */,
+				DBA28500259B83EE0006F326 /* ColorViews.swift in Sources */,
 				DBBE8FDE25816A8C005F10BE /* AppDelegate.swift in Sources */,
 				DBBE8FE025816A8C005F10BE /* SceneDelegate.swift in Sources */,
 				DBBE8FF425816CAB005F10BE /* EntryViewController.swift in Sources */,

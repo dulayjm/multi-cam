@@ -102,8 +102,8 @@ class PhotoPreviewView: UIView {
                 do {
                     try PHPhotoLibrary.shared().performChangesAndWait {
                         // comment out this next line if you don't want to save to camera row
-                        PHAssetChangeRequest.creationRequestForAsset(from: previewImage)
-                        print("photo has saved in library...")
+//                        PHAssetChangeRequest.creationRequestForAsset(from: previewImage)
+//                        print("photo has saved in library...")
                         self.handleCancel()
                     }
                 } catch let error {

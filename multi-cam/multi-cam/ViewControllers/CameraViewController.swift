@@ -30,11 +30,20 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         return button
     }()
     
+    lazy private var colorButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+        button.addTarget(self, action: #selector(handleColorSelection), for: .touchUpInside)
+        button.tintColor = .white
+        return button
+    }()
+    
     private let photoOutput = AVCapturePhotoOutput()
     private let photoOutput2 = AVCapturePhotoOutput()
     private let photoOutput3 = AVCapturePhotoOutput()
     var callback : (([Int:UIImage], [String])->())?
     var colorCube = ColorCube()
+    var extractedColors = [UIColor]()
     
     // MARK: - View LifeCycle
     override func viewDidLoad() {
@@ -44,12 +53,14 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     
     // MARK: - Private Methods
     private func setupUI() {
-        view.addSubviews(backButton, takePhotoButton)
+        view.addSubviews(backButton, takePhotoButton, colorButton)
         
         takePhotoButton.makeConstraints(top: nil, left: nil, right: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor, topMargin: 0, leftMargin: 0, rightMargin: 0, bottomMargin: 15, width: 80, height: 80)
         takePhotoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
         backButton.makeConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: nil, right: view.rightAnchor, bottom: nil, topMargin: 15, leftMargin: 0, rightMargin: 10, bottomMargin: 0, width: 50, height: 50)
+        
+        colorButton.makeConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: nil, right: view.rightAnchor, bottom: nil, topMargin: 60, leftMargin: 0, rightMargin: 10, bottomMargin: 0, width: 50, height: 50)
     }
     
     private func openCamera() {
@@ -169,26 +180,19 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         }
     }
     
+    @objc private func handleColorSelection() {
+        let colorsVC = ColorsViewController()
+        colorsVC.colors = self.extractedColors
+        
+        self.present(colorsVC, animated:true, completion: nil)
+    }
+    
     // Delegate Method
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         guard let imageData = photo.fileDataRepresentation() else { return }
         let previewImage = UIImage(data: imageData)
         
-        
-        var extractedColors:NSArray
-//        extractedColors = [_colorCube extractBrightColorsFromImage:image avoidColor:nil count:4];
-        extractedColors = colorCube.extractBrightColors(from: previewImage ?? UIImage(), avoid: .blue, count: 4) as! NSArray // UIColor empty constructor == nil ...
-        
-        print("Here daddy")
-        print(extractedColors[0])
-        let temp = UIViewController()
-        temp.view.backgroundColor = extractedColors[0] as! UIColor
-        self.present(temp, animated: true, completion: nil)
-        
-        // present a table view to demonstrate the colors ...
-        
-        
-        
+        extractedColors = colorCube.extractBrightColors(from: previewImage ?? UIImage(), avoid: .blue, count: 4) as! [UIColor]
         
         imageCache.updateValue(previewImage ?? UIImage(), forKey: imageCache.count)
 
