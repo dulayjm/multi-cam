@@ -12,7 +12,7 @@ import Photos
 var imageCache = [Int:UIImage]()
 var qrCodeLabelTextGrouping = [String]()
 
-class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVCaptureMetadataOutputObjectsDelegate {
+class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
     // MARK: - Attributes
     lazy private var backButton: UIButton = {
@@ -27,6 +27,14 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "capture_photo")?.withRenderingMode(.alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(handleTakePhoto), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy private var timerButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(named: "capture_photo"), for: .normal)
+        button.addTarget(self, action: #selector(handleTimerSelection), for: .touchUpInside)
+        button.tintColor = .white
         return button
     }()
     
@@ -53,14 +61,20 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     
     // MARK: - Private Methods
     private func setupUI() {
-        view.addSubviews(backButton, takePhotoButton, colorButton)
+        view.addSubviews(backButton, takePhotoButton, timerButton, colorButton)
         
-        takePhotoButton.makeConstraints(top: nil, left: nil, right: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor, topMargin: 0, leftMargin: 0, rightMargin: 0, bottomMargin: 15, width: 80, height: 80)
+        takePhotoButton.makeConstraints(top: nil, left: nil, right: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor,
+                                        topMargin: 0, leftMargin: 0, rightMargin: 0, bottomMargin: 15, width: 80, height: 80)
         takePhotoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
-        backButton.makeConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: nil, right: view.rightAnchor, bottom: nil, topMargin: 15, leftMargin: 0, rightMargin: 10, bottomMargin: 0, width: 50, height: 50)
+        backButton.makeConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: nil, right: view.rightAnchor, bottom: nil,
+                                   topMargin: 15, leftMargin: 0, rightMargin: 10, bottomMargin: 0, width: 50, height: 50)
         
-        colorButton.makeConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: nil, right: view.rightAnchor, bottom: nil, topMargin: 60, leftMargin: 0, rightMargin: 10, bottomMargin: 0, width: 50, height: 50)
+        timerButton.makeConstraints(top: nil, left: nil, right: view.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
+                                    topMargin: 0, leftMargin: 0, rightMargin: 80, bottomMargin: 30, width: 50, height: 50)
+        
+        colorButton.makeConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: nil, right: view.rightAnchor, bottom: nil,
+                                    topMargin: 60, leftMargin: 0, rightMargin: 10, bottomMargin: 0, width: 50, height: 50)
     }
     
     private func openCamera() {
@@ -180,25 +194,23 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         }
     }
     
+    @objc func handleTimerSelection() {
+        var _ = Timer.scheduledTimer(timeInterval: 2.0,
+          target: self,
+          selector: #selector(timerCalled),
+          userInfo: nil,
+          repeats: true)
+    }
+    
+    @objc private func timerCalled(){
+        handleTakePhoto()
+    }
+    
     @objc private func handleColorSelection() {
         let colorsVC = ColorsViewController()
         colorsVC.colors = self.extractedColors
         
         self.present(colorsVC, animated:true, completion: nil)
-    }
-    
-    // Delegate Method
-    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-        guard let imageData = photo.fileDataRepresentation() else { return }
-        let previewImage = UIImage(data: imageData)
-        
-        extractedColors = colorCube.extractBrightColors(from: previewImage ?? UIImage(), avoid: .blue, count: 4) as! [UIColor]
-        
-        imageCache.updateValue(previewImage ?? UIImage(), forKey: imageCache.count)
-
-        let photoPreviewContainer = PhotoPreviewView(frame: self.view.frame)
-        photoPreviewContainer.photoImageView.image = previewImage
-        self.view.addSubviews(photoPreviewContainer)
     }
     
     // Delegate Method - metadata attributes
@@ -231,7 +243,21 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
 }
 
 // Extended delegate to handle multiple different outputs on the same instance
-extension AVCapturePhotoCaptureDelegate {
+extension CameraViewController: AVCapturePhotoCaptureDelegate {
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        guard let imageData = photo.fileDataRepresentation() else { return }
+        let previewImage = UIImage(data: imageData)
+        
+        extractedColors = colorCube.extractBrightColors(from: previewImage ?? UIImage(), avoid: .blue, count: 4) as! [UIColor]
+        
+        imageCache.updateValue(previewImage ?? UIImage(), forKey: imageCache.count)
+
+        // default photo capture on the button
+        let photoPreviewContainer = PhotoPreviewView(frame: self.view.frame)
+        photoPreviewContainer.photoImageView.image = previewImage
+        self.view.addSubviews(photoPreviewContainer)
+    }
+    
     func photoOutput2(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         guard let imageData = photo.fileDataRepresentation() else { return }
         let previewImage = UIImage(data: imageData)

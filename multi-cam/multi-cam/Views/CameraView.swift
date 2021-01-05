@@ -90,6 +90,8 @@ class PhotoPreviewView: UIView {
     
     @objc private func handleCancel() {
         DispatchQueue.main.async {
+            // clear data synchromization on cancel button
+//            imageCache = [Int:UIImage]()
             self.removeFromSuperview()
         }
     }
