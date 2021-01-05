@@ -63,12 +63,13 @@ class MainViewController: UIViewController {
             self.qrLabels = labels
             // TODO: send labels to model or API when you get the chance later
         }
-        print(self.qrLabels)
     }
     
     @objc func libraryButtonPressed(_ sender:UIButton!) {
         let newViewController = LibraryViewController()
         newViewController.imageCache = self.imageCache
+        newViewController.qrLabels = self.qrLabels
+        print(self.qrLabels)
         self.present(newViewController, animated: true, completion: nil)
     }
 }
