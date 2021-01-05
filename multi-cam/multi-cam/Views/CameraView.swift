@@ -43,6 +43,25 @@ extension UIView {
     }
 }
 
+extension CameraViewController {
+    func setupUI() {
+        view.addSubviews(backButton, takePhotoButton, timerButton, colorButton)
+        
+        takePhotoButton.makeConstraints(top: nil, left: nil, right: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor,
+                                        topMargin: 0, leftMargin: 0, rightMargin: 0, bottomMargin: 15, width: 80, height: 80)
+        takePhotoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+        backButton.makeConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: nil, right: view.rightAnchor, bottom: nil,
+                                   topMargin: 15, leftMargin: 0, rightMargin: 10, bottomMargin: 0, width: 50, height: 50)
+        
+        timerButton.makeConstraints(top: nil, left: nil, right: view.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
+                                    topMargin: 0, leftMargin: 0, rightMargin: 80, bottomMargin: 30, width: 50, height: 50)
+        
+        colorButton.makeConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: nil, right: view.rightAnchor, bottom: nil,
+                                    topMargin: 60, leftMargin: 0, rightMargin: 10, bottomMargin: 0, width: 50, height: 50)
+    }
+}
+
 class PhotoPreviewView: UIView {
     
     let photoImageView: UIImageView = {

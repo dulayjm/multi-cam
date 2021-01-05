@@ -15,7 +15,7 @@ var qrCodeLabelTextGrouping = [String]()
 class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
     // MARK: - Attributes
-    lazy private var backButton: UIButton = {
+    lazy var backButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "xmark"), for: .normal)
         button.addTarget(self, action: #selector(handleDismiss), for: .touchUpInside)
@@ -23,14 +23,14 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         return button
     }()
     
-    lazy private var takePhotoButton: UIButton = {
+    lazy var takePhotoButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "capture_photo")?.withRenderingMode(.alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(handleTakePhoto), for: .touchUpInside)
         return button
     }()
     
-    lazy private var timerButton: UIButton = {
+    lazy var timerButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "capture_photo"), for: .normal)
         button.addTarget(self, action: #selector(handleTimerSelection), for: .touchUpInside)
@@ -38,7 +38,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         return button
     }()
     
-    lazy private var colorButton: UIButton = {
+    lazy var colorButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "heart.fill"), for: .normal)
         button.addTarget(self, action: #selector(handleColorSelection), for: .touchUpInside)
@@ -60,23 +60,6 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     }
     
     // MARK: - Private Methods
-    private func setupUI() {
-        view.addSubviews(backButton, takePhotoButton, timerButton, colorButton)
-        
-        takePhotoButton.makeConstraints(top: nil, left: nil, right: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                                        topMargin: 0, leftMargin: 0, rightMargin: 0, bottomMargin: 15, width: 80, height: 80)
-        takePhotoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        
-        backButton.makeConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: nil, right: view.rightAnchor, bottom: nil,
-                                   topMargin: 15, leftMargin: 0, rightMargin: 10, bottomMargin: 0, width: 50, height: 50)
-        
-        timerButton.makeConstraints(top: nil, left: nil, right: view.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                                    topMargin: 0, leftMargin: 0, rightMargin: 80, bottomMargin: 30, width: 50, height: 50)
-        
-        colorButton.makeConstraints(top: view.safeAreaLayoutGuide.topAnchor, left: nil, right: view.rightAnchor, bottom: nil,
-                                    topMargin: 60, leftMargin: 0, rightMargin: 10, bottomMargin: 0, width: 50, height: 50)
-    }
-    
     private func openCamera() {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized: // the user has already authorized to access the camera.
@@ -202,7 +185,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
           repeats: true)
     }
     
-    @objc private func timerCalled(){
+    @objc private func timerCalled() {
         handleTakePhoto()
     }
     
