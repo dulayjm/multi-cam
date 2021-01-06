@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		DBA284EA259102D10006F326 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA284E9259102D10006F326 /* CameraView.swift */; };
+		DBA284F42593D3670006F326 /* ColorCube.m in Sources */ = {isa = PBXBuildFile; fileRef = DBA284F32593D3670006F326 /* ColorCube.m */; };
+		DBA284F82593D4340006F326 /* CCLocalMaximum.m in Sources */ = {isa = PBXBuildFile; fileRef = DBA284F72593D4340006F326 /* CCLocalMaximum.m */; };
+		DBA284FC259573DD0006F326 /* ColorsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA284FB259573DD0006F326 /* ColorsViewController.swift */; };
+		DBA28500259B83EE0006F326 /* ColorViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA284FF259B83EE0006F326 /* ColorViews.swift */; };
 		DBBE8FDE25816A8C005F10BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBE8FDD25816A8C005F10BE /* AppDelegate.swift */; };
 		DBBE8FE025816A8C005F10BE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBE8FDF25816A8C005F10BE /* SceneDelegate.swift */; };
 		DBBE8FE725816A8D005F10BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DBBE8FE625816A8D005F10BE /* Assets.xcassets */; };
@@ -24,6 +28,13 @@
 
 /* Begin PBXFileReference section */
 		DBA284E9259102D10006F326 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		DBA284F12593D2A80006F326 /* ColorCube.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ColorCube.h; sourceTree = "<group>"; };
+		DBA284F22593D3660006F326 /* multi-cam-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "multi-cam-Bridging-Header.h"; sourceTree = "<group>"; };
+		DBA284F32593D3670006F326 /* ColorCube.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ColorCube.m; sourceTree = "<group>"; };
+		DBA284F62593D4100006F326 /* CCLocalMaximum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCLocalMaximum.h; sourceTree = "<group>"; };
+		DBA284F72593D4340006F326 /* CCLocalMaximum.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CCLocalMaximum.m; sourceTree = "<group>"; };
+		DBA284FB259573DD0006F326 /* ColorsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorsViewController.swift; sourceTree = "<group>"; };
+		DBA284FF259B83EE0006F326 /* ColorViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorViews.swift; sourceTree = "<group>"; };
 		DBBE8FDA25816A8C005F10BE /* multi-cam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "multi-cam.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBBE8FDD25816A8C005F10BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DBBE8FDF25816A8C005F10BE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -51,6 +62,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DBA284F02593D1F10006F326 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				DBA284F12593D2A80006F326 /* ColorCube.h */,
+				DBA284F32593D3670006F326 /* ColorCube.m */,
+				DBA284F22593D3660006F326 /* multi-cam-Bridging-Header.h */,
+				DBA284F62593D4100006F326 /* CCLocalMaximum.h */,
+				DBA284F72593D4340006F326 /* CCLocalMaximum.m */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		DBBE8FD125816A8C005F10BE = {
 			isa = PBXGroup;
 			children = (
@@ -70,6 +93,7 @@
 		DBBE8FDC25816A8C005F10BE /* multi-cam */ = {
 			isa = PBXGroup;
 			children = (
+				DBA284F02593D1F10006F326 /* Resources */,
 				DBBE8FFE25818C81005F10BE /* ViewControllers */,
 				DBBE8FF825817E48005F10BE /* Models */,
 				DBBE8FF725817E40005F10BE /* Views */,
@@ -89,6 +113,7 @@
 				DBBE900325818D8F005F10BE /* MainViews.swift */,
 				DBBE90092582CF94005F10BE /* LibraryViews.swift */,
 				DBA284E9259102D10006F326 /* CameraView.swift */,
+				DBA284FF259B83EE0006F326 /* ColorViews.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -108,6 +133,7 @@
 				DBBE900025818D17005F10BE /* MainViewController.swift */,
 				DBBE90062582CE71005F10BE /* LibraryViewController.swift */,
 				DBBE900F258426EC005F10BE /* CameraViewController.swift */,
+				DBA284FB259573DD0006F326 /* ColorsViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -143,6 +169,7 @@
 				TargetAttributes = {
 					DBBE8FD925816A8C005F10BE = {
 						CreatedOnToolsVersion = 12.2;
+						LastSwiftMigration = 1220;
 					};
 				};
 			};
@@ -181,14 +208,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DBA284FC259573DD0006F326 /* ColorsViewController.swift in Sources */,
 				DBBE900A2582CF94005F10BE /* LibraryViews.swift in Sources */,
 				DBBE9010258426EC005F10BE /* CameraViewController.swift in Sources */,
+				DBA28500259B83EE0006F326 /* ColorViews.swift in Sources */,
 				DBBE8FDE25816A8C005F10BE /* AppDelegate.swift in Sources */,
 				DBBE8FE025816A8C005F10BE /* SceneDelegate.swift in Sources */,
 				DBBE8FF425816CAB005F10BE /* EntryViewController.swift in Sources */,
 				DBBE8FFA25817F5E005F10BE /* EntryViews.swift in Sources */,
 				DBBE90072582CE71005F10BE /* LibraryViewController.swift in Sources */,
 				DBA284EA259102D10006F326 /* CameraView.swift in Sources */,
+				DBA284F82593D4340006F326 /* CCLocalMaximum.m in Sources */,
+				DBA284F42593D3670006F326 /* ColorCube.m in Sources */,
 				DBBE900125818D17005F10BE /* MainViewController.swift in Sources */,
 				DBBE900D25841D80005F10BE /* DataModel.swift in Sources */,
 				DBBE900425818D8F005F10BE /* MainViews.swift in Sources */,
@@ -330,6 +361,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 26H3AK6WB4;
 				INFOPLIST_FILE = "multi-cam/Info.plist";
@@ -339,6 +371,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "SLUVislab.multi-cam";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "multi-cam/Resources/multi-cam-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -349,6 +383,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 26H3AK6WB4;
 				INFOPLIST_FILE = "multi-cam/Info.plist";
@@ -358,6 +393,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "SLUVislab.multi-cam";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "multi-cam/Resources/multi-cam-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

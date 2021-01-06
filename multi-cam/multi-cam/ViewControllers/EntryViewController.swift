@@ -32,11 +32,11 @@ class EntryViewController: UIViewController {
             for: .touchUpInside)
         return button
     }()
-    
+
     // MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         view.backgroundColor = .blue
         setupEntryContentView()
     }
