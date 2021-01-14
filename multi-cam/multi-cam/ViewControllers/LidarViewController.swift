@@ -23,8 +23,7 @@ class LidarViewController: UIViewController, ARSessionDelegate {
     var planeDetectionButton: RoundedButton = {
         let button = RoundedButton()
         button.tintColor = .blue
-        button.setTitle("Start", for: .normal)
-        // add target
+        button.setTitle("Plane", for: .normal)
         button.addTarget(
             self,
             action: #selector(togglePlaneDetectionButtonPressed(_:)),
@@ -36,7 +35,6 @@ class LidarViewController: UIViewController, ARSessionDelegate {
         let button = RoundedButton()
         button.tintColor = .blue
         button.setTitle("Save", for: .normal)
-        // add target
         button.addTarget(
             self,
             action: #selector(saveButtonPressed(_:)),
@@ -45,6 +43,7 @@ class LidarViewController: UIViewController, ARSessionDelegate {
     }()
     
     let coachingOverlay = ARCoachingOverlayView()
+    var discoveredQRCodes = [String]()
     
     // MARK: - View Lifecycle
     override func viewDidLoad() {
@@ -94,14 +93,17 @@ class LidarViewController: UIViewController, ARSessionDelegate {
         arView.debugOptions.insert(.showSceneUnderstanding)
         
         // For performance, disable render options that are not required for this app.
-        arView.renderOptions = [.disablePersonOcclusion, .disableDepthOfField, .disableMotionBlur]
+        arView.renderOptions = [.disablePersonOcclusion, .disableDepthOfField, .disableMotionBlur] // change here ? for parameters in the world tracking session
         
         // Manually configure what kind of AR session to run
         arView.automaticallyConfigureSession = false
         let configuration = ARWorldTrackingConfiguration()
         configuration.sceneReconstruction = .mesh
 
-        configuration.environmentTexturing = .automatic
+//        let captureMetadataOutput = AVCaptureMetadataOutput()
+//        arView.addOutput(captureMetadataOutput)
+        
+        configuration.environmentTexturing = .automatic // and here ?
         arView.session.run(configuration)
     }
     
@@ -190,7 +192,7 @@ class LidarViewController: UIViewController, ARSessionDelegate {
                 let componentStride = vertices.stride / 3
                 verticesPointer.storeBytes(of: vertexWorldPosition.x, toByteOffset: vertexOffset, as: Float.self)
                 verticesPointer.storeBytes(of: vertexWorldPosition.y, toByteOffset: vertexOffset + componentStride, as: Float.self)
-                verticesPointer.storeBytes(of: vertexWorldPosition.z, toByteOffset: vertexOffset + (2 * componentStride), as: Float.self)
+                verticesPointer.storeBytes(of: vertexWorldPosition.z, toByteOffset: vertexOffset + (2 * componentStride), as: Float.self) // change here?
             }
             
             // Initializing MDLMeshBuffers with the content of the vertex and face MTLBuffers
@@ -201,7 +203,7 @@ class LidarViewController: UIViewController, ARSessionDelegate {
             
             // Creating a MDLSubMesh with the index buffer and a generic material
             let indexCount = faces.count * faces.indexCountPerPrimitive
-            let material = MDLMaterial(name: "mat1", scatteringFunction: MDLPhysicallyPlausibleScatteringFunction())
+            let material = MDLMaterial(name: "mat1", scatteringFunction: MDLPhysicallyPlausibleScatteringFunction()) // change here ?
             let submesh = MDLSubmesh(indexBuffer: indexBuffer, indexCount: indexCount, indexType: .uInt32, geometryType: .triangles, material: material)
             
             // Creating a MDLVertexDescriptor to describe the memory layout of the mesh
@@ -257,6 +259,28 @@ class LidarViewController: UIViewController, ARSessionDelegate {
             self.present(alertController, animated: true, completion: nil)
         }
     }
+    
+    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        let image = CIImage(cvPixelBuffer: frame.capturedImage)
+        let detector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: nil)
+        let features = detector!.features(in: image)
+
+        
+        for feature in features as! [CIQRCodeFeature] {
+            if !discoveredQRCodes.contains(feature.messageString!) {
+                discoveredQRCodes.append(feature.messageString!)
+                
+                print(discoveredQRCodes)
+
+                
+                let url = URL(string: feature.messageString!)
+                let position = SCNVector3(frame.camera.transform.columns.3.x,
+                                          frame.camera.transform.columns.3.y,
+                                          frame.camera.transform.columns.3.z)
+            }
+         }
+    }
+    
     
 }
 
@@ -339,3 +363,38 @@ class RoundedButton: UIButton {
     }
 }
 
+//extension LidarViewController: AVCaptureMetadataOutputObjectsDelegate {
+//
+//    func metadataOutput(_ captureOutput: AVCaptureMetadataOutput,
+//                        didOutput metadataObjects: [AVMetadataObject],
+//                        from connection: AVCaptureConnection) {
+//        if metadataObjects.count == 0 {
+//            return
+//        }
+//
+//        // Get the metadata object.
+//        let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
+//
+//        if metadataObj.type == AVMetadataObject.ObjectType.qr {
+//            if let outputString = metadataObj.stringValue {
+//                DispatchQueue.main.async {
+//                    print(outputString)
+////                    qrCodeLabelTextGrouping.append(outputString)
+//
+////                    let newViewController = LidarViewController()
+////                    self.present(newViewController, animated: true, completion: nil)
+//                    self.removeFromParent()
+//                    self.dismiss(animated: false, completion: nil)
+////                    let alertVC = UIAlertController()
+////                    alertVC.title = outputString
+////                    self.present(alertVC, animated: false, completion: nil)
+////                    alertVC.modalPresentationStyle = .overFullScreen
+////                    alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+////                    alertVC.removeFromParent()
+////                    alertVC.dismiss(animated: false, completion: nil)
+//                }
+//            }
+//        }
+//    }
+//
+//}

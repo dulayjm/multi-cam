@@ -212,13 +212,16 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                 DispatchQueue.main.async {
                     print(outputString)
                     qrCodeLabelTextGrouping.append(outputString)
-                    let alertVC = UIAlertController()
-                    alertVC.title = outputString
-                    self.present(alertVC, animated: false, completion: nil)
-                    alertVC.modalPresentationStyle = .overFullScreen
-                    alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-                    alertVC.removeFromParent()
-                    alertVC.dismiss(animated: false, completion: nil)
+                    
+                    let newViewController = LidarViewController()
+                    self.present(newViewController, animated: true, completion: nil)
+//                    let alertVC = UIAlertController()
+//                    alertVC.title = outputString
+//                    self.present(alertVC, animated: false, completion: nil)
+//                    alertVC.modalPresentationStyle = .overFullScreen
+//                    alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+//                    alertVC.removeFromParent()
+//                    alertVC.dismiss(animated: false, completion: nil)
                 }
             }
         }
