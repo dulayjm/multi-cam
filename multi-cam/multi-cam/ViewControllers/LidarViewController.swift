@@ -44,6 +44,8 @@ class LidarViewController: UIViewController, ARSessionDelegate {
     
     let coachingOverlay = ARCoachingOverlayView()
     var discoveredQRCodes = [String]()
+    var callback : ((Bool)->())?
+    var shouldCaptureSessionRun = false
     
     // MARK: - View Lifecycle
     override func viewDidLoad() {
@@ -103,7 +105,7 @@ class LidarViewController: UIViewController, ARSessionDelegate {
 //        let captureMetadataOutput = AVCaptureMetadataOutput()
 //        arView.addOutput(captureMetadataOutput)
         
-        configuration.environmentTexturing = .automatic // and here ?
+        configuration.environmentTexturing = .automatic
         arView.session.run(configuration)
     }
     
@@ -265,22 +267,35 @@ class LidarViewController: UIViewController, ARSessionDelegate {
         let detector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: nil)
         let features = detector!.features(in: image)
 
-        
         for feature in features as! [CIQRCodeFeature] {
             if !discoveredQRCodes.contains(feature.messageString!) {
                 discoveredQRCodes.append(feature.messageString!)
-                
                 print(discoveredQRCodes)
 
+//                self.removeFromParent()
+                // probably create some sort of callback or delegate here
+                // to enforce that session running on the previous call
+                // potentially just create a variable that can be passed around on this class-based attribute?
                 
-                let url = URL(string: feature.messageString!)
-                let position = SCNVector3(frame.camera.transform.columns.3.x,
-                                          frame.camera.transform.columns.3.y,
-                                          frame.camera.transform.columns.3.z)
+//                self.parent?.captureSession.startRunning()
+                
+                DispatchQueue.main.async {
+//                    self.callback?(self.shouldCaptureSessionRun)
+                    self.dismiss(animated: false, completion: nil)
+                }
+                
+                // so now we are at a thread error, and delay loading windows
+                
+                
+                
+                
+//                let url = URL(string: feature.messageString!)
+//                let position = SCNVector3(frame.camera.transform.columns.3.x,
+//                                          frame.camera.transform.columns.3.y,
+//                                          frame.camera.transform.columns.3.z)
             }
          }
     }
-    
     
 }
 

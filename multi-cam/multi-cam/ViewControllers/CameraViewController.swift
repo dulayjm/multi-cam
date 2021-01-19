@@ -52,7 +52,9 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     var callback : (([Int:UIImage], [String])->())?
     var colorCube = ColorCube()
     var extractedColors = [UIColor]()
-    
+    let captureSession = AVCaptureMultiCamSession()
+    var shouldCaptureSessionRun = true
+
     // MARK: - View LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -93,54 +95,53 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     }
     
     private func setupCaptureSession() {
-        let captureSession = AVCaptureMultiCamSession()
-        
+
         // builtInWideAngleCamera, builtInUltraWideCamera, builtInTelephotoCamera
         if let captureDevice = AVCaptureDevice.default(.builtInTelephotoCamera, for: AVMediaType.video, position: .back) {
             do {
                 let input = try AVCaptureDeviceInput(device: captureDevice)
-                if captureSession.canAddInput(input) {
-                    captureSession.addInput(input)
+                if self.captureSession.canAddInput(input) {
+                    self.captureSession.addInput(input)
                 }
             } catch let error {
                 print("Failed to set input device with error: \(error)")
             }
             
-            if captureSession.canAddOutput(photoOutput) {
-                captureSession.addOutput(photoOutput)
+            if self.captureSession.canAddOutput(photoOutput) {
+                self.captureSession.addOutput(photoOutput)
             }
         }
         
         if let captureDevice2 = AVCaptureDevice.default(.builtInUltraWideCamera, for: AVMediaType.video, position: .back) {
             do {
                 let input2 = try AVCaptureDeviceInput(device: captureDevice2)
-                if captureSession.canAddInput(input2) {
-                    captureSession.addInput(input2)
+                if self.captureSession.canAddInput(input2) {
+                    self.captureSession.addInput(input2)
                 }
             } catch let error {
                 print("Failed to set input device with error: \(error)")
             }
             
-            if captureSession.canAddOutput(photoOutput2) {
-                captureSession.addOutput(photoOutput2)
+            if self.captureSession.canAddOutput(photoOutput2) {
+                self.captureSession.addOutput(photoOutput2)
             }
         }
         
         if let captureDevice3 = AVCaptureDevice.default(.builtInWideAngleCamera, for: AVMediaType.video, position: .back) {
             do {
                 let input3 = try AVCaptureDeviceInput(device: captureDevice3)
-                if captureSession.canAddInput(input3) {
-                    captureSession.addInput(input3)
+                if self.captureSession.canAddInput(input3) {
+                    self.captureSession.addInput(input3)
                 }
             } catch let error {
                 print("Failed to set input device with error: \(error)")
             }
             
-            if captureSession.canAddOutput(photoOutput3) {
-                captureSession.addOutput(photoOutput3)
+            if self.captureSession.canAddOutput(photoOutput3) {
+                self.captureSession.addOutput(photoOutput3)
             }
             
-            let cameraLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+            let cameraLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
             cameraLayer.frame = self.view.frame
             cameraLayer.videoGravity = .resizeAspectFill
             self.view.layer.addSublayer(cameraLayer)
@@ -148,22 +149,22 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
 
         // Initialize a AVCaptureMetadataOutput object and set it as the input device
         let captureMetadataOutput = AVCaptureMetadataOutput()
-        captureSession.addOutput(captureMetadataOutput)
+        self.captureSession.addOutput(captureMetadataOutput)
               
         // Set delegate and use the default dispatch queue to execute the call back
         captureMetadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
         captureMetadataOutput.metadataObjectTypes = [AVMetadataObject.ObjectType.qr]
         
-        print("number of capture session inputs", captureSession.inputs.count)
-        print("number of capture session outputs", captureSession.outputs.count)
-        captureSession.startRunning()
+        print("number of capture session inputs", self.captureSession.inputs.count)
+        print("number of capture session outputs", self.captureSession.outputs.count)
+        self.captureSession.startRunning()
         self.setupUI()
     }
     
     @objc private func handleDismiss() {
         DispatchQueue.main.async {
             self.callback?(imageCache, qrCodeLabelTextGrouping)
-            self.dismiss(animated: true, completion: nil)
+            self.dismiss(animated: false, completion: nil)
         }
     }
     
@@ -209,12 +210,31 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         
         if metadataObj.type == AVMetadataObject.ObjectType.qr {
             if let outputString = metadataObj.stringValue {
+                
+                
+
+                self.captureSession.stopRunning()
+
                 DispatchQueue.main.async {
+
+                    
                     print(outputString)
                     qrCodeLabelTextGrouping.append(outputString)
                     
+                    // so this is the speed improvment here
+                    // now you need to get it to start upon reloading the view ...
+                    // probably from the new loader in the other file
+                    
                     let newViewController = LidarViewController()
                     self.present(newViewController, animated: true, completion: nil)
+//                    newViewController.callback = { session in
+//                        self.shouldCaptureSessionRun = session
+//                    }
+                    self.captureSession.startRunning()
+                    print("HERE")
+                    self.removeFromParent()
+                    
+                    
 //                    let alertVC = UIAlertController()
 //                    alertVC.title = outputString
 //                    self.present(alertVC, animated: false, completion: nil)
@@ -222,7 +242,14 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
 //                    alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
 //                    alertVC.removeFromParent()
 //                    alertVC.dismiss(animated: false, completion: nil)
+                    
+                  
                 }
+                
+                if self.shouldCaptureSessionRun {
+                    self.captureSession.startRunning()
+                }
+
             }
         }
     }
