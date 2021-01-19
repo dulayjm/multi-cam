@@ -44,8 +44,6 @@ class LidarViewController: UIViewController, ARSessionDelegate {
     
     let coachingOverlay = ARCoachingOverlayView()
     var discoveredQRCodes = [String]()
-    var callback : ((Bool)->())?
-    var shouldCaptureSessionRun = false
     
     // MARK: - View Lifecycle
     override func viewDidLoad() {
@@ -101,14 +99,10 @@ class LidarViewController: UIViewController, ARSessionDelegate {
         arView.automaticallyConfigureSession = false
         let configuration = ARWorldTrackingConfiguration()
         configuration.sceneReconstruction = .mesh
-
-//        let captureMetadataOutput = AVCaptureMetadataOutput()
-//        arView.addOutput(captureMetadataOutput)
         
         configuration.environmentTexturing = .automatic
         arView.session.run(configuration)
     }
-    
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -116,11 +110,9 @@ class LidarViewController: UIViewController, ARSessionDelegate {
         UIApplication.shared.isIdleTimerDisabled = true
     }
     
-    
     override var prefersHomeIndicatorAutoHidden: Bool {
         return true
     }
-    
     
     override var prefersStatusBarHidden: Bool {
         return true
@@ -271,28 +263,12 @@ class LidarViewController: UIViewController, ARSessionDelegate {
             if !discoveredQRCodes.contains(feature.messageString!) {
                 discoveredQRCodes.append(feature.messageString!)
                 print(discoveredQRCodes)
-
-//                self.removeFromParent()
-                // probably create some sort of callback or delegate here
-                // to enforce that session running on the previous call
-                // potentially just create a variable that can be passed around on this class-based attribute?
-                
-//                self.parent?.captureSession.startRunning()
-                
+ 
                 DispatchQueue.main.async {
-//                    self.callback?(self.shouldCaptureSessionRun)
+                    // Dismiss current view controller
                     self.dismiss(animated: false, completion: nil)
                 }
                 
-                // so now we are at a thread error, and delay loading windows
-                
-                
-                
-                
-//                let url = URL(string: feature.messageString!)
-//                let position = SCNVector3(frame.camera.transform.columns.3.x,
-//                                          frame.camera.transform.columns.3.y,
-//                                          frame.camera.transform.columns.3.z)
             }
          }
     }
@@ -377,39 +353,3 @@ class RoundedButton: UIButton {
         }
     }
 }
-
-//extension LidarViewController: AVCaptureMetadataOutputObjectsDelegate {
-//
-//    func metadataOutput(_ captureOutput: AVCaptureMetadataOutput,
-//                        didOutput metadataObjects: [AVMetadataObject],
-//                        from connection: AVCaptureConnection) {
-//        if metadataObjects.count == 0 {
-//            return
-//        }
-//
-//        // Get the metadata object.
-//        let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
-//
-//        if metadataObj.type == AVMetadataObject.ObjectType.qr {
-//            if let outputString = metadataObj.stringValue {
-//                DispatchQueue.main.async {
-//                    print(outputString)
-////                    qrCodeLabelTextGrouping.append(outputString)
-//
-////                    let newViewController = LidarViewController()
-////                    self.present(newViewController, animated: true, completion: nil)
-//                    self.removeFromParent()
-//                    self.dismiss(animated: false, completion: nil)
-////                    let alertVC = UIAlertController()
-////                    alertVC.title = outputString
-////                    self.present(alertVC, animated: false, completion: nil)
-////                    alertVC.modalPresentationStyle = .overFullScreen
-////                    alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-////                    alertVC.removeFromParent()
-////                    alertVC.dismiss(animated: false, completion: nil)
-//                }
-//            }
-//        }
-//    }
-//
-//}

@@ -211,45 +211,19 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         if metadataObj.type == AVMetadataObject.ObjectType.qr {
             if let outputString = metadataObj.stringValue {
                 
-                
-
+                // Stop current capture session from slowing down frame with AV inputs
                 self.captureSession.stopRunning()
 
                 DispatchQueue.main.async {
-
-                    
                     print(outputString)
                     qrCodeLabelTextGrouping.append(outputString)
-                    
-                    // so this is the speed improvment here
-                    // now you need to get it to start upon reloading the view ...
-                    // probably from the new loader in the other file
-                    
+                                        
                     let newViewController = LidarViewController()
                     self.present(newViewController, animated: true, completion: nil)
-//                    newViewController.callback = { session in
-//                        self.shouldCaptureSessionRun = session
-//                    }
-                    self.captureSession.startRunning()
-                    print("HERE")
-                    self.removeFromParent()
                     
-                    
-//                    let alertVC = UIAlertController()
-//                    alertVC.title = outputString
-//                    self.present(alertVC, animated: false, completion: nil)
-//                    alertVC.modalPresentationStyle = .overFullScreen
-//                    alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-//                    alertVC.removeFromParent()
-//                    alertVC.dismiss(animated: false, completion: nil)
-                    
-                  
-                }
-                
-                if self.shouldCaptureSessionRun {
+                    // Restart the capture session - writen data still persists
                     self.captureSession.startRunning()
                 }
-
             }
         }
     }
