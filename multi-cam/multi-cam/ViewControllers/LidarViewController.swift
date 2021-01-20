@@ -42,6 +42,17 @@ class LidarViewController: UIViewController, ARSessionDelegate {
         return button
     }()
     
+    var dismissButton: RoundedButton = {
+        let button = RoundedButton()
+        button.tintColor = .blue
+        button.setTitle("Back", for: .normal)
+        button.addTarget(
+            self,
+            action: #selector(dismissButtonPressed),
+            for: .touchUpInside)
+        return button
+    }()
+    
     let coachingOverlay = ARCoachingOverlayView()
     var discoveredQRCodes = [String]()
     
@@ -58,8 +69,17 @@ class LidarViewController: UIViewController, ARSessionDelegate {
             arView.heightAnchor.constraint(equalTo: self.view.heightAnchor)
         ])
         
+        arView.addSubview(dismissButton)
         arView.addSubview(saveButton)
         arView.addSubview(planeDetectionButton)
+        
+        dismissButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            dismissButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: -100),
+            dismissButton.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -300),
+            dismissButton.widthAnchor.constraint(equalToConstant: 50),
+            dismissButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
         
         saveButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -119,6 +139,12 @@ class LidarViewController: UIViewController, ARSessionDelegate {
     }
     
     // MARK: - Private Methods
+    
+    @objc func dismissButtonPressed() {
+        DispatchQueue.main.async {
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
     
     /// - Tag: TogglePlaneDetection
     @objc func togglePlaneDetectionButtonPressed(_ button: UIButton) {
@@ -232,7 +258,6 @@ class LidarViewController: UIViewController, ARSessionDelegate {
         }
     }
     /// ***********************************************************************************************
-
     
     func session(_ session: ARSession, didFailWithError error: Error) {
         guard error is ARError else { return }
