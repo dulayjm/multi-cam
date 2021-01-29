@@ -54,7 +54,8 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     var extractedColors = [UIColor]()
     let captureSession = AVCaptureMultiCamSession()
     var shouldCaptureSessionRun = true
-
+    var catchImage:UIImage?
+    
     // MARK: - View LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -210,10 +211,37 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         
         if metadataObj.type == AVMetadataObject.ObjectType.qr {
             if let outputString = metadataObj.stringValue {
+                                
+                // ******************************************************************
+                // compute greenness score
                 
+                // maybe try screen capture instead
+                handleTakePhoto()
+                
+//                guard let ciImage = CIImage(image: self.catchImage!) else {return}
+                print("catch image" , self.catchImage)
+                
+                // testing
+                
+                
+                var total = 0
+                var score = 0
+                for i in 0...Int(self.view.frame.height) {
+                    for j in 0...Int(self.view.frame.width) {
+                        score += self.catchImage?.getGreenScore(pos: CGPoint(x: i, y: j)) ?? 0
+                        total += 1
+                    }
+                }
+                
+                print("QR Code: ", outputString)
+                print("Greenness Score: ", score)
+                
+                // then print the qr code, and the greenness score temporarily
+                // ******************************************************************
+
                 // Stop current capture session from slowing down frame with AV inputs
                 self.captureSession.stopRunning()
-
+                
                 DispatchQueue.main.async {
                     print(outputString)
                     qrCodeLabelTextGrouping.append(outputString)
@@ -239,6 +267,11 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
         
         imageCache.updateValue(previewImage ?? UIImage(), forKey: imageCache.count)
 
+        // bind to self.catchImage for greenness score development
+        self.catchImage = previewImage
+    
+        print("inside of the capture delegate", self.catchImage)
+        
         // default photo capture on the button
         let photoPreviewContainer = PhotoPreviewView(frame: self.view.frame)
         photoPreviewContainer.photoImageView.image = previewImage
@@ -255,5 +288,26 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
         guard let imageData = photo.fileDataRepresentation() else { return }
         let previewImage = UIImage(data: imageData)
         imageCache.updateValue(previewImage ?? UIImage(), forKey: imageCache.count)
+    }
+}
+
+// MARK: - Green pixel extractor
+extension UIImage {
+    func getGreenScore(pos: CGPoint) -> Int {
+        let pixelData = self.cgImage!.dataProvider!.data
+        let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
+
+        let pixelInfo: Int = ((Int(self.size.width) * Int(pos.y)) + Int(pos.x)) * 4
+
+        let r = CGFloat(data[pixelInfo]) / CGFloat(255.0)
+        let g = CGFloat(data[pixelInfo+1]) / CGFloat(255.0)
+
+        if g>r {
+            return 1
+        }
+        
+        else {
+            return -1
+        }
     }
 }
