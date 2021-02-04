@@ -5,9 +5,12 @@
 //  Created by Justin Dulay on 12/18/20.
 //
 
-import UIKit
 import AVFoundation
+import CoreGraphics
+import Foundation
 import Photos
+import QuartzCore
+import UIKit
 
 var imageCache = [Int:UIImage]()
 var qrCodeLabelTextGrouping = [String]()
@@ -98,7 +101,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     private func setupCaptureSession() {
 
         // builtInWideAngleCamera, builtInUltraWideCamera, builtInTelephotoCamera
-        if let captureDevice = AVCaptureDevice.default(.builtInTelephotoCamera, for: AVMediaType.video, position: .back) {
+        if let captureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: AVMediaType.video, position: .back) {
             do {
                 let input = try AVCaptureDeviceInput(device: captureDevice)
                 if self.captureSession.canAddInput(input) {
@@ -128,7 +131,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             }
         }
         
-        if let captureDevice3 = AVCaptureDevice.default(.builtInWideAngleCamera, for: AVMediaType.video, position: .back) {
+        if let captureDevice3 = AVCaptureDevice.default(.builtInTelephotoCamera, for: AVMediaType.video, position: .back) {
             do {
                 let input3 = try AVCaptureDeviceInput(device: captureDevice3)
                 if self.captureSession.canAddInput(input3) {
@@ -198,7 +201,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         self.present(colorsVC, animated:true, completion: nil)
     }
     
-    // Delegate Method - metadata attributes
+    // MARK: - Delegate Method - metadata attributes
     func metadataOutput(_ captureOutput: AVCaptureMetadataOutput,
                         didOutput metadataObjects: [AVMetadataObject],
                         from connection: AVCaptureConnection) {
@@ -215,28 +218,44 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                 // ******************************************************************
                 // compute greenness score
                 
-                // maybe try screen capture instead
                 handleTakePhoto()
                 
-//                guard let ciImage = CIImage(image: self.catchImage!) else {return}
-                print("catch image" , self.catchImage)
+                guard let image = self.catchImage else {return}
+                guard let cgImage = self.catchImage?.cgImage else { return }
+
+                let width = Int(cgImage.width)
+                let height = Int(cgImage.height)
                 
-                // testing
+                let bitmapBytesPerRow = width
+                let cap = cgImage.bytesPerRow * cgImage.height
+                let pixelData = UnsafeMutablePointer<UInt8>.allocate(capacity: cap)
+                let colorSpace3: CGColorSpace = CGColorSpace(name: CGColorSpace.sRGB)!
+                let context = CGContext(data: pixelData, width: cgImage.width, height: cgImage.height, bitsPerComponent: cgImage.bitsPerComponent, bytesPerRow: cgImage.bytesPerRow, space: colorSpace3, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) // wow!
+//                By generating an UnsafeMutablePointer with Pixels (we already know that they are composed of RGB values, as well as an Alpha multiplier), we can manipulate CGContext with information about the size and bitmap (32-bit, big endian format).
+                let rect = CGRect(
+                    origin: CGPoint(x: 0, y: 0),
+                    size: CGSize(width: width, height: height) // maybe switch to width and height from above
+                )
+                context?.draw(cgImage, in: rect, byTiling: false)
+                print("the context is: ", context)
+
+                let numberOfComponents = colorSpace3.numberOfComponents + 1;
+                var totalGreenGreaterThanRed = 0
+                var i = 0
                 
+                while i < cap {
+                    let red = pixelData[i]
+                    let green = pixelData[i+1]
+                    let blue = pixelData[i+2]
+                    let alpha = pixelData[i+3]
                 
-                var total = 0
-                var score = 0
-                for i in 0...Int(self.view.frame.height) {
-                    for j in 0...Int(self.view.frame.width) {
-                        score += self.catchImage?.getGreenScore(pos: CGPoint(x: i, y: j)) ?? 0
-                        total += 1
+                    if green > red {
+                        totalGreenGreaterThanRed+=1
                     }
+                    
+                    i += 4
                 }
-                
-                print("QR Code: ", outputString)
-                print("Greenness Score: ", score)
-                
-                // then print the qr code, and the greenness score temporarily
+                print("green greater than red", totalGreenGreaterThanRed)
                 // ******************************************************************
 
                 // Stop current capture session from slowing down frame with AV inputs
@@ -266,11 +285,7 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
         extractedColors = colorCube.extractBrightColors(from: previewImage ?? UIImage(), avoid: .blue, count: 4) as! [UIColor]
         
         imageCache.updateValue(previewImage ?? UIImage(), forKey: imageCache.count)
-
-        // bind to self.catchImage for greenness score development
         self.catchImage = previewImage
-    
-        print("inside of the capture delegate", self.catchImage)
         
         // default photo capture on the button
         let photoPreviewContainer = PhotoPreviewView(frame: self.view.frame)
