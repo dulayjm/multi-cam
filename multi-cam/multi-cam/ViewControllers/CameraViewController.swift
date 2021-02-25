@@ -58,6 +58,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     let captureSession = AVCaptureMultiCamSession()
     var shouldCaptureSessionRun = true
     var catchImage:UIImage?
+    var counts = 0
     
     // MARK: - View LifeCycle
     override func viewDidLoad() {
@@ -183,15 +184,61 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     }
     
     @objc func handleTimerSelection() {
-        var _ = Timer.scheduledTimer(timeInterval: 2.0,
+        let _ = Timer.scheduledTimer(timeInterval: 1.0,
           target: self,
           selector: #selector(timerCalled),
           userInfo: nil,
           repeats: true)
     }
     
-    @objc private func timerCalled() {
+    @objc private func timerCalled(timer: Timer) {
+        counts += 1
         handleTakePhoto()
+        
+        if counts >= 10 {
+
+            let url = URL(string: "https://dulayjm@hopper.slu.edu:5000/")
+            let session = URLSession.shared
+            let boundary = UUID().uuidString
+            var request = URLRequest(url: url!)
+            request.httpMethod = "POST"
+            request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+
+            let retreivedImage: UIImage? = imageCache[0] // TODO: change here for adding more programmatically
+            
+            let imageData = retreivedImage!.jpegData(compressionQuality: 1)
+            if (imageData == nil) {
+                print("UIImageJPEGRepresentation return nil")
+                return
+            }
+
+            var body = Data()
+            let paramName = "paramName" // TODO: fill in programaticlaly
+            let fileName = "img.jpeg"
+            // Add the image data to the raw http request data
+            body.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"\(paramName)\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!)
+            body.append("Content-Type: image/png\r\n\r\n".data(using: .utf8)!)
+            body.append(imageData!)
+            body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
+
+            request.httpBody = body
+                        
+            // Send a POST request to the URL, with the data we created earlier
+            session.uploadTask(with: request, from: body, completionHandler: { responseData, response, error in
+                if error == nil {
+                    let jsonData = try? JSONSerialization.jsonObject(with: responseData!, options: .allowFragments)
+                    if let json = jsonData as? [String: Any] {
+                        print(json)
+                    }
+                }
+            }).resume()
+
+            // after sending, delete the images there
+            imageCache = [Int:UIImage]()
+            // exit the timer mode
+            timer.invalidate()
+        }
     }
     
     @objc private func handleColorSelection() {
@@ -288,9 +335,9 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
         self.catchImage = previewImage
         
         // default photo capture on the button
-        let photoPreviewContainer = PhotoPreviewView(frame: self.view.frame)
-        photoPreviewContainer.photoImageView.image = previewImage
-        self.view.addSubviews(photoPreviewContainer)
+//        let photoPreviewContainer = PhotoPreviewView(frame: self.view.frame)
+//        photoPreviewContainer.photoImageView.image = previewImage
+//        self.view.addSubviews(photoPreviewContainer)
     }
     
     func photoOutput2(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
@@ -325,4 +372,12 @@ extension UIImage {
             return -1
         }
     }
+}
+
+extension NSMutableData {
+  func appendString(_ string: String) {
+    if let data = string.data(using: .utf8) {
+      self.append(data)
+    }
+  }
 }
