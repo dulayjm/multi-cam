@@ -196,44 +196,52 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         handleTakePhoto()
         
         if counts >= 10 {
-
-            let url = URL(string: "https://dulayjm@hopper.slu.edu:5000/")
+            
+            let url = URL(string: "https://heroku-multicam.herokuapp.com/")
             let session = URLSession.shared
             let boundary = UUID().uuidString
             var request = URLRequest(url: url!)
             request.httpMethod = "POST"
             request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
 
-            let retreivedImage: UIImage? = imageCache[0] // TODO: change here for adding more programmatically
-            
-            let imageData = retreivedImage!.jpegData(compressionQuality: 1)
-            if (imageData == nil) {
-                print("UIImageJPEGRepresentation return nil")
-                return
-            }
-
             var body = Data()
-            let paramName = "paramName" // TODO: fill in programaticlaly
-            let fileName = "img.jpeg"
-            // Add the image data to the raw http request data
-            body.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
-            body.append("Content-Disposition: form-data; name=\"\(paramName)\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!)
-            body.append("Content-Type: image/png\r\n\r\n".data(using: .utf8)!)
-            body.append(imageData!)
-            body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
-
+            for i in 0...imageCache.count {
+                
+                let retreivedImage: UIImage? = imageCache[i]
+                
+                let imageData = retreivedImage!.jpegData(compressionQuality: 1)
+                if (imageData == nil) {
+                    print("UIImageJPEGRepresentation return nil")
+                    return
+                }
+                let paramName = "paramName-\(i)"
+                let fileName = "img-\(i).jpeg"
+                // Add the image data to the raw http request data
+                body.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
+                body.append("Content-Disposition: form-data; name=\"\(paramName)\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!)
+                body.append("Content-Type: image/png\r\n\r\n".data(using: .utf8)!)
+                body.append(imageData!)
+                body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
+            }
             request.httpBody = body
-                        
+            
+            print("the request is: ", request)
+            print("the body is: ", body)
+            print("the request body is ", request.httpBody)
+            
             // Send a POST request to the URL, with the data we created earlier
             session.uploadTask(with: request, from: body, completionHandler: { responseData, response, error in
+                
+                print("the error is", error)
                 if error == nil {
                     let jsonData = try? JSONSerialization.jsonObject(with: responseData!, options: .allowFragments)
+                    print("the jsonData is", jsonData)
                     if let json = jsonData as? [String: Any] {
-                        print(json)
+                        print("the json is : ", json)
                     }
                 }
             }).resume()
-
+            
             // after sending, delete the images there
             imageCache = [Int:UIImage]()
             // exit the timer mode
