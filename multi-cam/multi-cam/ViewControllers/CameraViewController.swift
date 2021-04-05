@@ -192,10 +192,14 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     }
     
     @objc private func timerCalled(timer: Timer) {
-        counts += 1
         handleTakePhoto()
+        counts += 1
+        print("up here", imageCache.count)
+
+        // *********** THIS IS A WORK-IN-PROGRESS HERE *************************************
+        // *********** Some server code is at this endpoint, but it is NOT deployed ********
         
-        if counts >= 10 {
+        if counts >= 2 {
             
             let url = URL(string: "https://heroku-multicam.herokuapp.com/")
             let session = URLSession.shared
@@ -207,8 +211,8 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             var body = Data()
             for i in 0...imageCache.count {
                 
-                let retreivedImage: UIImage? = imageCache[i]
-                
+                let retreivedImage: UIImage? = imageCache[0]
+//                print(imageCache.count)
                 let imageData = retreivedImage!.jpegData(compressionQuality: 1)
                 if (imageData == nil) {
                     print("UIImageJPEGRepresentation return nil")
@@ -225,8 +229,6 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             }
             request.httpBody = body
             
-            print("the request is: ", request)
-            print("the body is: ", body)
             print("the request body is ", request.httpBody)
             
             // Send a POST request to the URL, with the data we created earlier
@@ -343,9 +345,9 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
         self.catchImage = previewImage
         
         // default photo capture on the button
-//        let photoPreviewContainer = PhotoPreviewView(frame: self.view.frame)
-//        photoPreviewContainer.photoImageView.image = previewImage
-//        self.view.addSubviews(photoPreviewContainer)
+        let photoPreviewContainer = PhotoPreviewView(frame: self.view.frame)
+        photoPreviewContainer.photoImageView.image = previewImage
+        self.view.addSubviews(photoPreviewContainer)
     }
     
     func photoOutput2(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
