@@ -24,6 +24,7 @@
 		DBBE900A2582CF94005F10BE /* LibraryViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBE90092582CF94005F10BE /* LibraryViews.swift */; };
 		DBBE900D25841D80005F10BE /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBE900C25841D80005F10BE /* DataModel.swift */; };
 		DBBE9010258426EC005F10BE /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBE900F258426EC005F10BE /* CameraViewController.swift */; };
+		DBDE625B25A66B2A00012E15 /* LidarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDE625A25A66B2A00012E15 /* LidarViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +50,7 @@
 		DBBE90092582CF94005F10BE /* LibraryViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryViews.swift; sourceTree = "<group>"; };
 		DBBE900C25841D80005F10BE /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		DBBE900F258426EC005F10BE /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		DBDE625A25A66B2A00012E15 /* LidarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LidarViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +136,7 @@
 				DBBE90062582CE71005F10BE /* LibraryViewController.swift */,
 				DBBE900F258426EC005F10BE /* CameraViewController.swift */,
 				DBA284FB259573DD0006F326 /* ColorsViewController.swift */,
+				DBDE625A25A66B2A00012E15 /* LidarViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -223,6 +226,7 @@
 				DBBE900125818D17005F10BE /* MainViewController.swift in Sources */,
 				DBBE900D25841D80005F10BE /* DataModel.swift in Sources */,
 				DBBE900425818D8F005F10BE /* MainViews.swift in Sources */,
+				DBDE625B25A66B2A00012E15 /* LidarViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -33,7 +33,17 @@ class MainViewController: UIViewController {
             for: .touchUpInside)
         return button
     }()
-
+    
+    let lidarButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("AR-LiDAR View", for: .normal)
+        button.addTarget(
+            self,
+            action: #selector(lidarButtonPressed),
+            for: .touchUpInside)
+        return button
+    }()
+    
     let libraryButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Photo Library", for: .normal)
@@ -63,6 +73,11 @@ class MainViewController: UIViewController {
             self.qrLabels = labels
             // TODO: send labels to model or API when you get the chance later
         }
+    }
+    
+    @objc func lidarButtonPressed(_ sender:UIButton!) {
+        let newViewController = LidarViewController()
+        self.present(newViewController, animated: true, completion: nil)
     }
     
     @objc func libraryButtonPressed(_ sender:UIButton!) {

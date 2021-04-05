@@ -62,13 +62,15 @@ class LibraryViewController : UIViewController {
         setupBackButton()
         setupShareButton()
         
-        for i in 1...self.qrLabels.count-1 {
-            var dct = Dictionary<String, AnyObject>()
-            dct.updateValue(i as AnyObject, forKey: "idx")
-            dct.updateValue("\(self.qrLabels[i])" as AnyObject, forKey: "label")
-            qrCSVArray.append(dct)
+        if qrLabels.count > 0 {
+            for i in 0...self.qrLabels.count-1 {
+                var dct = Dictionary<String, AnyObject>()
+                dct.updateValue(i as AnyObject, forKey: "idx")
+                dct.updateValue("\(self.qrLabels[i])" as AnyObject, forKey: "label")
+                qrCSVArray.append(dct)
+            }
+            createCSV(from: qrCSVArray)
         }
-        createCSV(from: qrCSVArray)
     }
     
     // MARK: - Private Methods

@@ -16,6 +16,7 @@ extension MainViewController {
         
         mainContentView.addSubview(sluLogoLeft)
         mainContentView.addSubview(cameraButton)
+        mainContentView.addSubview(lidarButton)
         mainContentView.addSubview(libraryButton)
         
         mainContentView.translatesAutoresizingMaskIntoConstraints = false
@@ -26,6 +27,7 @@ extension MainViewController {
         mainContentView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         
         setupLogoLeft()
+        setupLidarButton()
         setupLibraryButton()
         setupCameraButton()
     }
@@ -52,6 +54,17 @@ extension MainViewController {
         cameraButton.centerYAnchor.constraint(equalTo: mainContentView.centerYAnchor, constant: -150).isActive = true
     }
     
+    func setupLidarButton() {
+        lidarButton.translatesAutoresizingMaskIntoConstraints = false
+        lidarButton.isUserInteractionEnabled = true
+        lidarButton.backgroundColor = .white
+        
+        lidarButton.widthAnchor.constraint(equalToConstant: 180).isActive = true
+        lidarButton.heightAnchor.constraint(equalToConstant: 180).isActive = true
+        lidarButton.centerXAnchor.constraint(equalTo: mainContentView.centerXAnchor, constant: 0).isActive = true
+        lidarButton.centerYAnchor.constraint(equalTo: libraryButton.centerYAnchor, constant: -200).isActive = true
+    }
+    
     func setupLibraryButton() {
         libraryButton.translatesAutoresizingMaskIntoConstraints = false
         libraryButton.isUserInteractionEnabled = true
@@ -60,7 +73,7 @@ extension MainViewController {
         libraryButton.widthAnchor.constraint(equalToConstant: 180).isActive = true
         libraryButton.heightAnchor.constraint(equalToConstant: 180).isActive = true
         libraryButton.centerXAnchor.constraint(equalTo: mainContentView.centerXAnchor, constant: 0).isActive = true
-        libraryButton.centerYAnchor.constraint(equalTo: mainContentView.centerYAnchor, constant: 150).isActive = true
+        libraryButton.centerYAnchor.constraint(equalTo: mainContentView.centerYAnchor, constant: 250).isActive = true
     }
     
 }

@@ -5,9 +5,12 @@
 //  Created by Justin Dulay on 12/18/20.
 //
 
-import UIKit
 import AVFoundation
+import CoreGraphics
+import Foundation
 import Photos
+import QuartzCore
+import UIKit
 
 var imageCache = [Int:UIImage]()
 var qrCodeLabelTextGrouping = [String]()
@@ -52,6 +55,10 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     var callback : (([Int:UIImage], [String])->())?
     var colorCube = ColorCube()
     var extractedColors = [UIColor]()
+    let captureSession = AVCaptureMultiCamSession()
+    var shouldCaptureSessionRun = true
+    var catchImage:UIImage?
+    var counts = 0
     
     // MARK: - View LifeCycle
     override func viewDidLoad() {
@@ -93,54 +100,53 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     }
     
     private func setupCaptureSession() {
-        let captureSession = AVCaptureMultiCamSession()
-        
+
         // builtInWideAngleCamera, builtInUltraWideCamera, builtInTelephotoCamera
-        if let captureDevice = AVCaptureDevice.default(.builtInTelephotoCamera, for: AVMediaType.video, position: .back) {
+        if let captureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: AVMediaType.video, position: .back) {
             do {
                 let input = try AVCaptureDeviceInput(device: captureDevice)
-                if captureSession.canAddInput(input) {
-                    captureSession.addInput(input)
+                if self.captureSession.canAddInput(input) {
+                    self.captureSession.addInput(input)
                 }
             } catch let error {
                 print("Failed to set input device with error: \(error)")
             }
             
-            if captureSession.canAddOutput(photoOutput) {
-                captureSession.addOutput(photoOutput)
+            if self.captureSession.canAddOutput(photoOutput) {
+                self.captureSession.addOutput(photoOutput)
             }
         }
         
         if let captureDevice2 = AVCaptureDevice.default(.builtInUltraWideCamera, for: AVMediaType.video, position: .back) {
             do {
                 let input2 = try AVCaptureDeviceInput(device: captureDevice2)
-                if captureSession.canAddInput(input2) {
-                    captureSession.addInput(input2)
+                if self.captureSession.canAddInput(input2) {
+                    self.captureSession.addInput(input2)
                 }
             } catch let error {
                 print("Failed to set input device with error: \(error)")
             }
             
-            if captureSession.canAddOutput(photoOutput2) {
-                captureSession.addOutput(photoOutput2)
+            if self.captureSession.canAddOutput(photoOutput2) {
+                self.captureSession.addOutput(photoOutput2)
             }
         }
         
-        if let captureDevice3 = AVCaptureDevice.default(.builtInWideAngleCamera, for: AVMediaType.video, position: .back) {
+        if let captureDevice3 = AVCaptureDevice.default(.builtInTelephotoCamera, for: AVMediaType.video, position: .back) {
             do {
                 let input3 = try AVCaptureDeviceInput(device: captureDevice3)
-                if captureSession.canAddInput(input3) {
-                    captureSession.addInput(input3)
+                if self.captureSession.canAddInput(input3) {
+                    self.captureSession.addInput(input3)
                 }
             } catch let error {
                 print("Failed to set input device with error: \(error)")
             }
             
-            if captureSession.canAddOutput(photoOutput3) {
-                captureSession.addOutput(photoOutput3)
+            if self.captureSession.canAddOutput(photoOutput3) {
+                self.captureSession.addOutput(photoOutput3)
             }
             
-            let cameraLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+            let cameraLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
             cameraLayer.frame = self.view.frame
             cameraLayer.videoGravity = .resizeAspectFill
             self.view.layer.addSublayer(cameraLayer)
@@ -148,22 +154,22 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
 
         // Initialize a AVCaptureMetadataOutput object and set it as the input device
         let captureMetadataOutput = AVCaptureMetadataOutput()
-        captureSession.addOutput(captureMetadataOutput)
+        self.captureSession.addOutput(captureMetadataOutput)
               
         // Set delegate and use the default dispatch queue to execute the call back
         captureMetadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
         captureMetadataOutput.metadataObjectTypes = [AVMetadataObject.ObjectType.qr]
         
-        print("number of capture session inputs", captureSession.inputs.count)
-        print("number of capture session outputs", captureSession.outputs.count)
-        captureSession.startRunning()
+        print("number of capture session inputs", self.captureSession.inputs.count)
+        print("number of capture session outputs", self.captureSession.outputs.count)
+        self.captureSession.startRunning()
         self.setupUI()
     }
     
     @objc private func handleDismiss() {
         DispatchQueue.main.async {
             self.callback?(imageCache, qrCodeLabelTextGrouping)
-            self.dismiss(animated: true, completion: nil)
+            self.dismiss(animated: false, completion: nil)
         }
     }
     
@@ -178,15 +184,71 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     }
     
     @objc func handleTimerSelection() {
-        var _ = Timer.scheduledTimer(timeInterval: 2.0,
+        let _ = Timer.scheduledTimer(timeInterval: 1.0,
           target: self,
           selector: #selector(timerCalled),
           userInfo: nil,
           repeats: true)
     }
     
-    @objc private func timerCalled() {
+    @objc private func timerCalled(timer: Timer) {
         handleTakePhoto()
+        counts += 1
+        print("up here", imageCache.count)
+
+        // *********** THIS IS A WORK-IN-PROGRESS HERE *************************************
+        // *********** Some server code is at this endpoint, but it is NOT deployed ********
+        
+        if counts >= 2 {
+            
+            let url = URL(string: "https://heroku-multicam.herokuapp.com/")
+            let session = URLSession.shared
+            let boundary = UUID().uuidString
+            var request = URLRequest(url: url!)
+            request.httpMethod = "POST"
+            request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+
+            var body = Data()
+            for i in 0...imageCache.count {
+                
+                let retreivedImage: UIImage? = imageCache[0]
+//                print(imageCache.count)
+                let imageData = retreivedImage!.jpegData(compressionQuality: 1)
+                if (imageData == nil) {
+                    print("UIImageJPEGRepresentation return nil")
+                    return
+                }
+                let paramName = "paramName-\(i)"
+                let fileName = "img-\(i).jpeg"
+                // Add the image data to the raw http request data
+                body.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
+                body.append("Content-Disposition: form-data; name=\"\(paramName)\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!)
+                body.append("Content-Type: image/png\r\n\r\n".data(using: .utf8)!)
+                body.append(imageData!)
+                body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
+            }
+            request.httpBody = body
+            
+            print("the request body is ", request.httpBody)
+            
+            // Send a POST request to the URL, with the data we created earlier
+            session.uploadTask(with: request, from: body, completionHandler: { responseData, response, error in
+                
+                print("the error is", error)
+                if error == nil {
+                    let jsonData = try? JSONSerialization.jsonObject(with: responseData!, options: .allowFragments)
+                    print("the jsonData is", jsonData)
+                    if let json = jsonData as? [String: Any] {
+                        print("the json is : ", json)
+                    }
+                }
+            }).resume()
+            
+            // after sending, delete the images there
+            imageCache = [Int:UIImage]()
+            // exit the timer mode
+            timer.invalidate()
+        }
     }
     
     @objc private func handleColorSelection() {
@@ -196,7 +258,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         self.present(colorsVC, animated:true, completion: nil)
     }
     
-    // Delegate Method - metadata attributes
+    // MARK: - Delegate Method - metadata attributes
     func metadataOutput(_ captureOutput: AVCaptureMetadataOutput,
                         didOutput metadataObjects: [AVMetadataObject],
                         from connection: AVCaptureConnection) {
@@ -209,16 +271,62 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         
         if metadataObj.type == AVMetadataObject.ObjectType.qr {
             if let outputString = metadataObj.stringValue {
+                                
+                // ******************************************************************
+                // compute greenness score
+                
+                handleTakePhoto()
+                
+                guard let image = self.catchImage else {return}
+                guard let cgImage = self.catchImage?.cgImage else { return }
+
+                let width = Int(cgImage.width)
+                let height = Int(cgImage.height)
+                
+                let bitmapBytesPerRow = width
+                let cap = cgImage.bytesPerRow * cgImage.height
+                let pixelData = UnsafeMutablePointer<UInt8>.allocate(capacity: cap)
+                let colorSpace3: CGColorSpace = CGColorSpace(name: CGColorSpace.sRGB)!
+                let context = CGContext(data: pixelData, width: cgImage.width, height: cgImage.height, bitsPerComponent: cgImage.bitsPerComponent, bytesPerRow: cgImage.bytesPerRow, space: colorSpace3, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) // wow!
+//                By generating an UnsafeMutablePointer with Pixels (we already know that they are composed of RGB values, as well as an Alpha multiplier), we can manipulate CGContext with information about the size and bitmap (32-bit, big endian format).
+                let rect = CGRect(
+                    origin: CGPoint(x: 0, y: 0),
+                    size: CGSize(width: width, height: height) // maybe switch to width and height from above
+                )
+                context?.draw(cgImage, in: rect, byTiling: false)
+                print("the context is: ", context)
+
+                let numberOfComponents = colorSpace3.numberOfComponents + 1;
+                var totalGreenGreaterThanRed = 0
+                var i = 0
+                
+                while i < cap {
+                    let red = pixelData[i]
+                    let green = pixelData[i+1]
+                    let blue = pixelData[i+2]
+                    let alpha = pixelData[i+3]
+                
+                    if green > red {
+                        totalGreenGreaterThanRed+=1
+                    }
+                    
+                    i += 4
+                }
+                print("green greater than red", totalGreenGreaterThanRed)
+                // ******************************************************************
+
+                // Stop current capture session from slowing down frame with AV inputs
+                self.captureSession.stopRunning()
+                
                 DispatchQueue.main.async {
                     print(outputString)
                     qrCodeLabelTextGrouping.append(outputString)
-                    let alertVC = UIAlertController()
-                    alertVC.title = outputString
-                    self.present(alertVC, animated: false, completion: nil)
-                    alertVC.modalPresentationStyle = .overFullScreen
-                    alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-                    alertVC.removeFromParent()
-                    alertVC.dismiss(animated: false, completion: nil)
+                                        
+                    let newViewController = LidarViewController()
+                    self.present(newViewController, animated: true, completion: nil)
+                    
+                    // Restart the capture session - writen data still persists
+                    self.captureSession.startRunning()
                 }
             }
         }
@@ -234,7 +342,8 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
         extractedColors = colorCube.extractBrightColors(from: previewImage ?? UIImage(), avoid: .blue, count: 4) as! [UIColor]
         
         imageCache.updateValue(previewImage ?? UIImage(), forKey: imageCache.count)
-
+        self.catchImage = previewImage
+        
         // default photo capture on the button
         let photoPreviewContainer = PhotoPreviewView(frame: self.view.frame)
         photoPreviewContainer.photoImageView.image = previewImage
@@ -252,4 +361,33 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
         let previewImage = UIImage(data: imageData)
         imageCache.updateValue(previewImage ?? UIImage(), forKey: imageCache.count)
     }
+}
+
+// MARK: - Green pixel extractor
+extension UIImage {
+    func getGreenScore(pos: CGPoint) -> Int {
+        let pixelData = self.cgImage!.dataProvider!.data
+        let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
+
+        let pixelInfo: Int = ((Int(self.size.width) * Int(pos.y)) + Int(pos.x)) * 4
+
+        let r = CGFloat(data[pixelInfo]) / CGFloat(255.0)
+        let g = CGFloat(data[pixelInfo+1]) / CGFloat(255.0)
+
+        if g>r {
+            return 1
+        }
+        
+        else {
+            return -1
+        }
+    }
+}
+
+extension NSMutableData {
+  func appendString(_ string: String) {
+    if let data = string.data(using: .utf8) {
+      self.append(data)
+    }
+  }
 }
