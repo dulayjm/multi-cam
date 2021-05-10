@@ -194,60 +194,64 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     @objc private func timerCalled(timer: Timer) {
         handleTakePhoto()
         counts += 1
-        print("up here", imageCache.count)
-
+        
         // *********** THIS IS A WORK-IN-PROGRESS HERE *************************************
         // *********** Some server code is at this endpoint, but it is NOT deployed ********
         
-        if counts >= 2 {
-            
-            let url = URL(string: "https://heroku-multicam.herokuapp.com/")
-            let session = URLSession.shared
-            let boundary = UUID().uuidString
-            var request = URLRequest(url: url!)
-            request.httpMethod = "POST"
-            request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-
-            var body = Data()
-            for i in 0...imageCache.count {
-                
-                let retreivedImage: UIImage? = imageCache[0]
-//                print(imageCache.count)
-                let imageData = retreivedImage!.jpegData(compressionQuality: 1)
-                if (imageData == nil) {
-                    print("UIImageJPEGRepresentation return nil")
-                    return
-                }
-                let paramName = "paramName-\(i)"
-                let fileName = "img-\(i).jpeg"
-                // Add the image data to the raw http request data
-                body.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
-                body.append("Content-Disposition: form-data; name=\"\(paramName)\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!)
-                body.append("Content-Type: image/png\r\n\r\n".data(using: .utf8)!)
-                body.append(imageData!)
-                body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
-            }
-            request.httpBody = body
-            
-            print("the request body is ", request.httpBody)
-            
-            // Send a POST request to the URL, with the data we created earlier
-            session.uploadTask(with: request, from: body, completionHandler: { responseData, response, error in
-                
-                print("the error is", error)
-                if error == nil {
-                    let jsonData = try? JSONSerialization.jsonObject(with: responseData!, options: .allowFragments)
-                    print("the jsonData is", jsonData)
-                    if let json = jsonData as? [String: Any] {
-                        print("the json is : ", json)
-                    }
-                }
-            }).resume()
-            
+        if counts >= 3 {
+            handleSavePhoto(image: imageCache[0])
+            handleSavePhoto(image: imageCache[1])
+            handleSavePhoto(image: imageCache[2])
+//
+//            let url = URL(string: "https://heroku-multicam.herokuapp.com/")
+//            let session = URLSession.shared
+//            let boundary = UUID().uuidString
+//            var request = URLRequest(url: url!)
+//            request.httpMethod = "POST"
+//            request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+//
+//            var body = Data()
+//            for i in 0...imageCache.count {
+//
+//                let retreivedImage: UIImage? = imageCache[0]
+////                print(imageCache.count)
+//                let imageData = retreivedImage!.jpegData(compressionQuality: 1)
+//                if (imageData == nil) {
+//                    print("UIImageJPEGRepresentation return nil")
+//                    return
+//                }
+//                let paramName = "paramName-\(i)"
+//                let fileName = "img-\(i).jpeg"
+//                // Add the image data to the raw http request data
+//                body.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
+//                body.append("Content-Disposition: form-data; name=\"\(paramName)\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!)
+//                body.append("Content-Type: image/png\r\n\r\n".data(using: .utf8)!)
+//                body.append(imageData!)
+//                body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
+//            }
+//            request.httpBody = body
+//
+//            print("the request body is ", request.httpBody)
+//
+//            // Send a POST request to the URL, with the data we created earlier
+//            session.uploadTask(with: request, from: body, completionHandler: { responseData, response, error in
+//
+//                print("the error is", error)
+//                if error == nil {
+//                    let jsonData = try? JSONSerialization.jsonObject(with: responseData!, options: .allowFragments)
+//                    print("the jsonData is", jsonData)
+//                    if let json = jsonData as? [String: Any] {
+//                        print("the json is : ", json)
+//                    }
+//                }
+//            }).resume()
+//
             // after sending, delete the images there
-            imageCache = [Int:UIImage]()
+        
+        
+//            imageCache = [Int:UIImage]()
             // exit the timer mode
-            timer.invalidate()
+//            timer.invalidate()
         }
     }
     
@@ -390,4 +394,28 @@ extension NSMutableData {
       self.append(data)
     }
   }
+}
+
+// Hot Fix:
+extension CameraViewController {
+    @objc private func handleSavePhoto(image: UIImage?) {
+
+        guard let previewImage = image ?? nil else { return }
+
+        PHPhotoLibrary.requestAuthorization { (status) in
+            if status == .authorized {
+                do {
+                    try PHPhotoLibrary.shared().performChangesAndWait {
+                        // comment out this next line if you don't want to save to camera row
+                        PHAssetChangeRequest.creationRequestForAsset(from: previewImage)
+                        print("photo has saved in library...")
+                    }
+                } catch let error {
+                    print("failed to save photo in library: ", error)
+                }
+            } else {
+                print("Something went wrong with permission...")
+            }
+        }
+    }
 }
