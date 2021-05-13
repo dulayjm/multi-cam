@@ -249,7 +249,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             // after sending, delete the images there
         
         
-//            imageCache = [Int:UIImage]()
+            imageCache = [Int:UIImage]()
             // exit the timer mode
 //            timer.invalidate()
         }
